@@ -1,5 +1,7 @@
 using System.Formats.Asn1;
 using System.Text;
+using Adp.Domain.Diploma;
+using Adp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +46,8 @@ public static class DependencyInjection
                 };
             });
 
+        services.AddScoped<IDiplomaRepository, DiplomaRepository>();
+        
         return services;
     }
 
