@@ -1,4 +1,3 @@
-using System.Formats.Asn1;
 using System.Text;
 using Adp.Domain.Diploma;
 using Adp.Infrastructure.Repositories;
@@ -25,26 +24,6 @@ public static class DependencyInjection
         services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ApdDbContext>()
             .AddDefaultTokenProviders();
-
-        // Add Authentication with JWT
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = "Apd.Api",
-                    ValidAudience = "Apd.Api",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKey"))
-                };
-            });
 
         services.AddScoped<IDiplomaRepository, DiplomaRepository>();
         

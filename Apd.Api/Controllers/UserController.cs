@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Apd.Api.Options;
 using Apd.Api.RequestModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using IdentityUser = Microsoft.AspNet.Identity.EntityFramework.IdentityUser;
 
 namespace Apd.Api.Controllers;
 
@@ -13,20 +14,23 @@ namespace Apd.Api.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly Microsoft.AspNet.Identity.UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-
-    public UserController(Microsoft.AspNet.Identity.UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager)
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SecretOptions _secretOptions;
+    
+    public UserController(UserManager<IdentityUser> userManager, IOptions<SecretOptions> secretOptions)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
+        _secretOptions = secretOptions.Value;
     }
 
-    [HttpPost("register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestModel request)
     {
-        var user = new IdentityUser { UserName = request.Username, Email = request.Email };
+        var user = new IdentityUser
+        {
+            UserName = request.Username,
+            Email = request.Email,
+        };
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
@@ -34,12 +38,12 @@ public class UserController : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        await _userManager.AddToRoleAsync(user.Id, request.Role);
+        await _userManager.AddToRoleAsync(user, request.Role);
 
         return Ok(new { message = "User registered successfully" });
     }
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestModel request)
     {
         var user = await _userManager.FindByNameAsync(request.Username);
@@ -49,23 +53,23 @@ public class UserController : ControllerBase
             return Unauthorized();
         }
 
-        var roles = await _userManager.GetRolesAsync(user.Id);
+        var roles = await _userManager.GetRolesAsync(user);
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, roles.FirstOrDefault() ?? "User")
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSuperSecretKey"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretOptions.MySecret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "JwtAuthExample",
-            audience: "JwtAuthExample",
+            issuer: "Apd.Api",
+            audience: "Apd.Api",
             claims: claims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: creds);
 
-        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 }

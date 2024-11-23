@@ -27,7 +27,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApdDbCont
     }
 }
 
-public class ApdDbContext : IdentityDbContext<IdentityUser>
+public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public ApdDbContext(DbContextOptions<ApdDbContext> options) :
         base(options)
