@@ -2,12 +2,34 @@ using Adp.Domain.Diploma;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Adp.Infrastructure;
 
-public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApdDbContext>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
+    public ApdDbContext CreateDbContext(string[] args)
+    {
+        // Build a configuration to get the connection string (if needed)
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "..", "Apd.Api"))
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var optionsBuilder = new DbContextOptionsBuilder<ApdDbContext>();
+        var connectionString = configuration.GetConnectionString("Postgres");
+
+        // Configure the DbContext with the connection string
+        optionsBuilder.UseNpgsql(connectionString);
+
+        return new ApdDbContext(optionsBuilder.Options);
+    }
+}
+
+public class ApdDbContext : IdentityDbContext<IdentityUser>
+{
+    public ApdDbContext(DbContextOptions<ApdDbContext> options) :
         base(options)
     {
         
@@ -20,6 +42,8 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>
             entity.ToTable("Diploma");
             entity.HasKey(x => x.DiplomaId);
         });
+        
+        base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Diploma?> Diplomas { get; set; }

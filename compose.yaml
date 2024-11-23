@@ -1,0 +1,24 @@
+﻿services:
+  apd.api:
+    image: apd.api
+    container_name: apd.api
+    build:
+      context: .
+      dockerfile: Apd.Api/Dockerfile
+    ports:
+      - "5095:5095"
+  
+  apd.database:
+    image: postgres:latest
+    container_name: apd.database
+    environment:
+      - POSTGRES_DB=adp
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/apd-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    
+    
+    

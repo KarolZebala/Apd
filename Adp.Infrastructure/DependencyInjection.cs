@@ -18,12 +18,12 @@ public static class DependencyInjection
     {
         // Add PostgreSQL
         var connectionString = configuration.GetConnectionString("Postgres");
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApdDbContext>(options =>
             options.UseNpgsql(connectionString));
 
         // Add Identity
         services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<ApdDbContext>()
             .AddDefaultTokenProviders();
 
         // Add Authentication with JWT
@@ -55,7 +55,7 @@ public static class DependencyInjection
     {
         using (var scope = app.ApplicationServices.CreateScope())
         {
-            using (var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+            using (var context = scope.ServiceProvider.GetRequiredService<ApdDbContext>())
             {
                 context.Database.Migrate();
             }

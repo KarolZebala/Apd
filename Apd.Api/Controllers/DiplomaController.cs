@@ -15,7 +15,19 @@ public class DiplomaController : ControllerBase
         _diplomaService = diplomaService;
     }
 
-    [HttpGet]
+    [HttpGet("ping")]
+    public ActionResult Ping()
+    {
+        return Ok("pong");
+    }
+    
+    [HttpPost("pingost")]
+    public ActionResult PingPost()
+    {
+        return Ok("pongpost");
+    }
+
+    [HttpGet("GetDiploma")]
     public async Task<ActionResult> GetDiploma(long diplomaId)
     {
         try
@@ -29,8 +41,8 @@ public class DiplomaController : ControllerBase
         }
     }
     
-    [HttpPost]
-    public async Task<IActionResult> AddDiploma(DiplomaDto dto)
+    [HttpPost("AddDiploma")]
+    public async Task<IActionResult> AddDiploma([FromBody] DiplomaDto dto)
     {
         try
         {
