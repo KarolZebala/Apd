@@ -19,6 +19,9 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Postgres");
         services.AddDbContext<ApdDbContext>(options =>
             options.UseNpgsql(connectionString));
+        
+        services.AddDbContext<WorkflowDbContext>(options =>
+            options.UseNpgsql(connectionString));
 
         // Add Identity
         services.AddIdentity<IdentityUser, IdentityRole>()
