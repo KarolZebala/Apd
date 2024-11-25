@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>d94d45af-232e-449b-a90e-5c6dca4857fc</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Elsa" Version="2.14.1" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.14.1" />
+        <PackageReference Include="Elsa.Persistence.EntityFramework.PostgreSql" Version="2.14.1" />
+        <PackageReference Include="Elsa.Persistence.EntityFrameworkCore" Version="1.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Adp.Application\Adp.Application.csproj" />
+      <ProjectReference Include="..\Adp.Infrastructure\Adp.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>
