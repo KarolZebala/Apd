@@ -48,7 +48,7 @@ public class UserController : ControllerBase
     {
         var user = await _userManager.FindByNameAsync(request.Username);
         var isValid = await _userManager.CheckPasswordAsync(user, request.Password);
-        if (user == null || !isValid)
+        if (user is null || !isValid)
         {
             return Unauthorized();
         }
@@ -71,5 +71,23 @@ public class UserController : ControllerBase
             signingCredentials: creds);
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+    }
+
+    [HttpGet("Search")]
+    public async Task<IActionResult> Search(string searchString,  string role)
+    {
+        var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+        
+        var filteredUsers = usersInRole
+            .Where(u => u.UserName.Contains(searchString))
+            .Take(10)
+            .Select(x => new
+            {
+                Id = x.Id,
+                UserName = x.UserName,
+                Email = x.Email,
+            }).ToArray();
+        
+        return Ok(filteredUsers);
     }
 }
