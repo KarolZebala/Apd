@@ -45,7 +45,16 @@ public class DiplomaService : IDiplomaService
 
     public async Task<long> AddDiploma(DiplomaDto diplomaDto)
     {
-        var diploma = Domain.Diploma.Diploma.Create(diplomaDto.Title);
+        var diploma = Domain.Diploma.Diploma.Create(
+            title: diplomaDto.Title,
+            type: diplomaDto.Type,
+            description: diplomaDto.Description,
+            departmentName: diplomaDto.DepartmentName,
+            course: diplomaDto.Course,
+            studentId: diplomaDto.StudentId,
+            promoterId: diplomaDto.PromoterId,
+            reviewerId: diplomaDto.ReviewerId
+        );
         
         await _diplomaRepository.AddAsync(diploma);
 

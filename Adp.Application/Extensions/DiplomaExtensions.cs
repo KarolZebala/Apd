@@ -11,6 +11,14 @@ public static class DiplomaExtensions
         {
             DiplomaId = diploma.DiplomaId,
             Title = diploma.Title,
+            Description = diploma.Description,
+            DepartmentName = diploma.DepartmentName,
+            Type = diploma.Type,
+            Status = diploma.Status,
+            StudentId = diploma.StudentId,
+            CreateDate = diploma.CreateDate,
+            PromoterId = diploma.PromoterId,
+            ReviewerId = diploma.ReviewerId,
         };
     }
 }

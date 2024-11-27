@@ -3,11 +3,25 @@ namespace Adp.Domain.Diploma;
 public sealed class Diploma
 {
     public static Diploma Create(
-        string title
+        string title,
+        string? type,
+        string? description,
+        string? departmentName,
+        string? course,
+        string studentId,
+        string promoterId,
+        string reviewerId
     )
     {
         return new Diploma(
-            title: title
+            title: title,
+            type: type,
+            description: description,
+            departmentName: departmentName,
+            course: course,
+            studentId: studentId,
+            promoterId: promoterId,
+            reviewerId: reviewerId
         );
     }
     
@@ -23,10 +37,28 @@ public sealed class Diploma
     public string PromoterId { get; private set; }
     public string ReviewerId { get; private set; }
     
-    private Diploma(string title)
+    private Diploma(
+        string title,
+        string? type,
+        string? description,
+        string? departmentName,
+        string? course,
+        string studentId,
+        string promoterId,
+        string reviewerId
+    )
     {
         Title = title;
         CreateDate = DateTime.UtcNow;
         Status = "New";
+        
+        StudentId = studentId;
+        PromoterId = promoterId;
+        ReviewerId = reviewerId;
+        
+        Type = type;
+        Description = description;
+        DepartmentName = departmentName;
+        Course = course;
     }
 }
