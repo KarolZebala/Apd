@@ -7,7 +7,7 @@ namespace Apd.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize(AuthenticationSchemes = "Bearer")]
+//[Authorize(AuthenticationSchemes = "Bearer")]
 public class DiplomaController : ControllerBase
 {
     private readonly IDiplomaService _diplomaService;
@@ -32,7 +32,7 @@ public class DiplomaController : ControllerBase
     }
     
     [HttpPost("AddDiploma")]
-    [Authorize(Roles = "Professor")]
+    //[Authorize(Roles = "Professor")]
     public async Task<IActionResult> AddDiploma([FromBody] DiplomaDto dto)
     {
         try

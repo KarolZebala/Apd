@@ -73,7 +73,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-//builder.Services.AddElsaConfig(builder.Configuration);
+builder.Services.AddElsaConfig(builder.Configuration);
 
 builder.Services.AddControllers();
 
