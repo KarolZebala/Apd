@@ -5,7 +5,6 @@ public sealed class Diploma
     public static Diploma Create(
         string title,
         string? type,
-        string? description,
         string? departmentName,
         string? course,
         string studentId,
@@ -16,7 +15,6 @@ public sealed class Diploma
         return new Diploma(
             title: title,
             type: type,
-            description: description,
             departmentName: departmentName,
             course: course,
             studentId: studentId,
@@ -24,7 +22,7 @@ public sealed class Diploma
             reviewerId: reviewerId
         );
     }
-    
+
     public long DiplomaId { get; private set; }
     public string Title { get; private set; }
     public string? Type { get; private set; }
@@ -36,11 +34,23 @@ public sealed class Diploma
     public string StudentId { get; private set; }
     public string PromoterId { get; private set; }
     public string ReviewerId { get; private set; }
-    
+
+    public IReadOnlyCollection<DiplomaAttachment> Attachments
+    {
+        get => _attachments;
+        private set => _attachments = new HashSet<DiplomaAttachment>(value);
+    }
+
+    private HashSet<DiplomaAttachment> _attachments;
+
+    private Diploma()
+    {
+        _attachments = new HashSet<DiplomaAttachment>();
+    }
+
     private Diploma(
         string title,
         string? type,
-        string? description,
         string? departmentName,
         string? course,
         string studentId,
@@ -51,14 +61,34 @@ public sealed class Diploma
         Title = title;
         CreateDate = DateTime.UtcNow;
         Status = "New";
-        
+
         StudentId = studentId;
         PromoterId = promoterId;
         ReviewerId = reviewerId;
-        
+
         Type = type;
-        Description = description;
         DepartmentName = departmentName;
         Course = course;
+    }
+
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
+    }
+
+    public void AddAttachent(
+        string attachmentTitle,
+        string attachmentExtension,
+        long attachmentSize,
+        byte[] attachmentData
+    )
+    {
+        var attachment = DiplomaAttachment.Create(
+            title: attachmentTitle,
+            extension: attachmentExtension,
+            size: attachmentSize,
+            data: attachmentData
+        );
+        _attachments.Add(attachment);
     }
 }

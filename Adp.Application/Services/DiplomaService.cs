@@ -1,5 +1,6 @@
 using Adp.Application.Dto;
 using Adp.Application.Extensions;
+using Adp.Application.RequestModel;
 using Adp.Domain.Diploma;
 using Apd.Api.Workflows;
 using Elsa.Models;
@@ -10,8 +11,9 @@ namespace Adp.Application.Services;
 
 public interface IDiplomaService
 {
-    Task<long> AddDiploma(DiplomaDto diplomaDto);
+    Task<long> AddDiploma(CreateDiplomaRequestModel requestModel);
     Task<DiplomaDto> GetDiplomaById(long diplomaId);
+    Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel);
 }
 
 public class DiplomaService : IDiplomaService
@@ -43,17 +45,16 @@ public class DiplomaService : IDiplomaService
         _workflowRegistry = workflowRegistry;*/
     }
 
-    public async Task<long> AddDiploma(DiplomaDto diplomaDto)
+    public async Task<long> AddDiploma(CreateDiplomaRequestModel requestModel)
     {
         var diploma = Domain.Diploma.Diploma.Create(
-            title: diplomaDto.Title,
-            type: diplomaDto.Type,
-            description: diplomaDto.Description,
-            departmentName: diplomaDto.DepartmentName,
-            course: diplomaDto.Course,
-            studentId: diplomaDto.StudentId,
-            promoterId: diplomaDto.PromoterId,
-            reviewerId: diplomaDto.ReviewerId
+            title: requestModel.Title,
+            type: requestModel.Type,
+            departmentName: requestModel.DepartmentName,
+            course: requestModel.Course,
+            studentId: requestModel.StudentId,
+            promoterId: requestModel.PromoterId,
+            reviewerId: requestModel.ReviewerId
         );
         
         await _diplomaRepository.AddAsync(diploma);
@@ -121,5 +122,35 @@ public class DiplomaService : IDiplomaService
         var diplomaDto = diploma.ToDto();
         
         return diplomaDto;
+    }
+
+    /// <summary>
+    /// Add extra information to diploma, add attachments to diploma
+    /// </summary>
+    public async Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel)
+    {
+        var diploma = await _diplomaRepository.GetByIdAsync(requestModel.DiplomaId);
+
+        if (diploma == null)
+        {
+            throw new ArgumentException("Not found diploma");
+        }
+        
+        diploma.UpdateDescription(requestModel.Description);
+
+        if (requestModel.Attachments != null)
+        {
+            foreach (var attachment in requestModel.Attachments)
+            {
+                diploma.AddAttachent(
+                    attachment.Title,
+                    attachment.Extension,
+                    attachment.Size,
+                    attachment.Data
+                );
+            }
+        }
+
+        await _diplomaRepository.SaveChangesAsync();
     }
 }

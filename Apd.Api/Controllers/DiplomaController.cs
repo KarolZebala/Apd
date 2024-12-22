@@ -1,5 +1,7 @@
 using Adp.Application.Dto;
+using Adp.Application.RequestModel;
 using Adp.Application.Services;
+using Apd.Api.RequestModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,13 +35,29 @@ public class DiplomaController : ControllerBase
     
     [HttpPost("AddDiploma")]
     //[Authorize(Roles = "Professor")]
-    public async Task<IActionResult> AddDiploma([FromBody] DiplomaDto dto)
+    public async Task<IActionResult> AddDiploma([FromBody] CreateDiplomaRequestModel requestModel)
     {
         try
         {
-            var res = await _diplomaService.AddDiploma(dto);
+            var res = await _diplomaService.AddDiploma(requestModel);
 
             return Ok(res);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
+
+    [HttpPost("UpdateDiploma")]
+    //[Authorize(Roles = "Student")]
+    public async Task<IActionResult> UpdateDiploma([FromBody] UpdateDiplomaDetailsRequestModel requestModel)
+    {
+        try
+        {
+            await _diplomaService.UpdateDiploma(requestModel);
+
+            return Ok();
         }
         catch (Exception e)
         {

@@ -14,7 +14,9 @@ public class DiplomaRepository(ApdDbContext context) : IDiplomaRepository
 
     public async Task<Diploma?> GetByIdAsync(long id)
     {
-        return await context.Diplomas.FirstOrDefaultAsync(x => x.DiplomaId == id);
+        return await context.Diplomas
+            .Include(x => x.Attachments)
+            .FirstOrDefaultAsync(x => x.DiplomaId == id);
     }
 
     public async Task<int> SaveChangesAsync()

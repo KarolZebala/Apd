@@ -3,6 +3,7 @@ using System;
 using Adp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Adp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApdDbContext))]
-    partial class ApdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241127180238_DiplomaProperties")]
+    partial class DiplomaProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,35 +71,6 @@ namespace Adp.Infrastructure.Migrations
                     b.HasKey("DiplomaId");
 
                     b.ToTable("Diploma", (string)null);
-                });
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaAttachment", b =>
-                {
-                    b.Property<long>("DiplomaAttachmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaAttachmentId"));
-
-                    b.Property<long>("DiplomaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Extension")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("DiplomaAttachmentId");
-
-                    b.HasIndex("DiplomaId");
-
-                    b.ToTable("DiplomaAttachment", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -295,35 +269,6 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaAttachment", b =>
-                {
-                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
-                        .WithMany("Attachments")
-                        .HasForeignKey("DiplomaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("Adp.Domain.Diploma.DiplomaAttachmentData", "Data", b1 =>
-                        {
-                            b1.Property<long>("DiplomaAttachmentId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<byte[]>("Data")
-                                .IsRequired()
-                                .HasColumnType("bytea");
-
-                            b1.HasKey("DiplomaAttachmentId");
-
-                            b1.ToTable("DiplomaAttachment");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DiplomaAttachmentId");
-                        });
-
-                    b.Navigation("Data")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -373,11 +318,6 @@ namespace Adp.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Adp.Domain.Diploma.Diploma", b =>
-                {
-                    b.Navigation("Attachments");
                 });
 #pragma warning restore 612, 618
         }

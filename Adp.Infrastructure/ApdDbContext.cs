@@ -45,6 +45,14 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
         {
             entity.ToTable("Diploma");
             entity.HasKey(x => x.DiplomaId);
+            entity.HasMany(x => x.Attachments).WithOne().HasForeignKey(x => x.DiplomaId);
+        });
+
+        modelBuilder.Entity<DiplomaAttachment>(entity =>
+        {
+            entity.ToTable("DiplomaAttachment");
+            entity.HasKey(x => x.DiplomaAttachmentId);
+            entity.OwnsOne(x => x.Data);
         });
         
         base.OnModelCreating(modelBuilder);
