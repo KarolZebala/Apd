@@ -14,6 +14,7 @@ public interface IDiplomaService
     Task<long> AddDiploma(CreateDiplomaRequestModel requestModel);
     Task<DiplomaDto> GetDiplomaById(long diplomaId);
     Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel);
+    Task<DiplomaDto[]> SearchDiploma(DiplomaSearchRequestModel requestModel);
 }
 
 public class DiplomaService : IDiplomaService
@@ -152,5 +153,20 @@ public class DiplomaService : IDiplomaService
         }
 
         await _diplomaRepository.SaveChangesAsync();
+    }
+
+    public async Task<DiplomaDto[]> SearchDiploma(DiplomaSearchRequestModel requestModel)
+    {
+        var diplomas = await _diplomaRepository.SearchDiplomaAsync(
+            requestModel.SearchString,
+            requestModel.StudentIds,
+            requestModel.PromoterIds,
+            requestModel.ReviewerIds,
+            requestModel.Status,
+            requestModel.PageNumber,
+            requestModel.PageSize
+        );
+
+        return diplomas.ToDto();
     }
 }

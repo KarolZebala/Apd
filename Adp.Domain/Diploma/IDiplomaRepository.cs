@@ -6,4 +6,14 @@ public interface IDiplomaRepository
 
     Task<Diploma?> GetByIdAsync(long id);
     Task<int> SaveChangesAsync();
+
+    Task<Diploma[]> SearchDiplomaAsync(
+        string? searchString,
+        string[]? studentIds,
+        string[]? promoterIds,
+        string[]? reviewerIds,
+        string? status,
+        int pageNumber,
+        int pageSize
+    );
 }

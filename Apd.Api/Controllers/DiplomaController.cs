@@ -64,4 +64,18 @@ public class DiplomaController : ControllerBase
             return Problem(e.Message);
         }
     }
+
+    [HttpPost("SearchDiploma")]
+    public async Task<IActionResult> SearchDiploma([FromBody] DiplomaSearchRequestModel requestModel)
+    {
+        try
+        {
+            var response = await _diplomaService.SearchDiploma(requestModel);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
 }

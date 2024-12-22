@@ -13,19 +13,3 @@ public class CreateDiplomaRequestModel
     public required string PromoterId { get; set; }
     public required string ReviewerId { get; set; }
 }
-
-public class UpdateDiplomaDetailsRequestModel
-{
-    public long DiplomaId { get; set; }
-    public string? Description { get; set; }
-    
-    public DiplomaAttachmentRequestModel[]? Attachments { get; set; }
-}
-
-public class DiplomaAttachmentRequestModel
-{
-    public string Title { get; set; }
-    public long Size { get; set; }
-    public string Extension { get; set; }
-    public byte[] Data { get; set; }
-}

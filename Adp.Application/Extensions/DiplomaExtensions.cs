@@ -21,4 +21,17 @@ public static class DiplomaExtensions
             ReviewerId = diploma.ReviewerId,
         };
     }
+    
+    public static DiplomaDto[] ToDto(this Diploma[] diplomas)
+    {
+        if(diplomas is null) return Array.Empty<DiplomaDto>();
+        
+        var diplomaDtos = new DiplomaDto[diplomas.Length];
+        for (int i = 0; i < diplomas.Length; i++)
+        {
+            var diplomaDto = diplomas[i].ToDto();
+            diplomaDtos[i] = diplomaDto;
+        }
+        return diplomaDtos;
+    }
 }
