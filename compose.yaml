@@ -1,13 +1,4 @@
 ﻿services:
-  apd.api:
-    image: apd.api
-    container_name: apd.api
-    build:
-      context: .
-      dockerfile: Apd.Api/Dockerfile
-    ports:
-      - "5095:5095"
-  
   apd.database:
     image: postgres:latest
     container_name: apd.database
@@ -19,6 +10,21 @@
       - ./.containers/apd-db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    
-    
-    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  apd.api:
+    image: apd.api
+    container_name: apd.api
+    build:
+      context: .
+      dockerfile: Apd.Api/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      apd.database:
+        condition: service_healthy
