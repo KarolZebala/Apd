@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  apd.api:
+    build:
+      context: "/Users/florosprout/Desktop/APSI/Apd"
+      dockerfile: "Apd.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Apd.Api.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "apd.api:dev"
+    ports: []
+    volumes:
+    - "/Users/florosprout/Desktop/APSI/Apd/Apd.Api:/app:rw"
+    - "/Users/florosprout/Desktop/APSI/Apd:/src:rw"
+    - "/Users/florosprout/.nuget/packages:/home/app/.nuget/packages"
+    working_dir: "/app"
