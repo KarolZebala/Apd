@@ -30,11 +30,11 @@
         condition: service_healthy
   
   apd.frontend:
-    image: nginx:latest
     container_name: apd.frontend
-    volumes:
-      - ./frontend/build:/usr/share/nginx/html:ro # Mapuj folder build do katalogu nginx
+    build:
+      context: ./test_front/test-frontend
+      dockerfile: Dockerfile
     ports:
-      - "3010:80" # Frontend dostępny na porcie 3000
+      - "3000:8080" # Mapowanie portu 3000 na hosta do portu 80 w kontenerze
     depends_on:
       - apd.api
