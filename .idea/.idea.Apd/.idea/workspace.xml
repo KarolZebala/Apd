@@ -10,12 +10,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="394b9ef1-4d93-4d1a-ac24-bb941a6ad036" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Apd/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Apd/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Apd/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Adp.Infrastructure/Migrations/ApdDbContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Apd.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Apd.Api/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/1/pg_internal.init" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/1/pg_internal.init" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16391" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16391" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16398" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16398" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16403" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16403" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16451" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16451" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16456" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16456" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16484" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16484" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16485" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16485" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/16486" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/16486" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/16385/pg_internal.init" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/16385/pg_internal.init" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/base/5/pg_internal.init" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/base/5/pg_internal.init" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/global/pg_control" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/global/pg_control" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/global/pg_internal.init" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/global/pg_internal.init" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/pg_wal/000000010000000000000001" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/pg_wal/000000010000000000000001" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/pg_xact/0000" beforeDir="false" afterPath="$PROJECT_DIR$/.containers/apd-db/pg_xact/0000" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.containers/apd-db/postmaster.pid" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Apd/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Apd/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +74,7 @@
   &quot;keyToString&quot;: {
     &quot;.NET Launch Settings Profile.Apd.Api: https.executor&quot;: &quot;Debug&quot;,
     &quot;Docker.Apd.Api/Dockerfile.executor&quot;: &quot;Debug&quot;,
+    &quot;Docker.compose.yaml.apd.frontend: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -79,7 +92,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Docker.compose.yaml: Compose Deployment">
+  <component name="RunManager" selected="Docker.compose.yaml.apd.frontend: Compose Deployment">
     <configuration name="Apd.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Apd.Api/Apd.Api.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net9.0" />
@@ -121,6 +134,13 @@
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile">
         <settings />
@@ -137,8 +157,23 @@
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
+    <configuration name="compose.yaml.apd.frontend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="apd.frontend" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="compose.yaml" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.compose.yaml.apd.frontend: Compose Deployment" />
         <item itemvalue="Docker.compose.yaml: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -154,7 +189,9 @@
       <workItem from="1733850451938" duration="3827000" />
       <workItem from="1735656241176" duration="3105000" />
       <workItem from="1735662713289" duration="193000" />
-      <workItem from="1735663497803" duration="3645000" />
+      <workItem from="1735663497803" duration="5534000" />
+      <workItem from="1735847137276" duration="3761000" />
+      <workItem from="1735913066247" duration="1868000" />
     </task>
     <servers />
   </component>
