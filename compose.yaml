@@ -28,3 +28,15 @@
     depends_on:
       apd.database:
         condition: service_healthy
+        
+  apd.front:
+    image: apd.front
+    container_name: apd.front
+    build:
+      context: ./Frontend/test-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      apd.api:
+        condition: service_started
