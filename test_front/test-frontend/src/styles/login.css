@@ -1,0 +1,21 @@
+.login-page {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .login-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-link {
+    display: block;
+    margin-top: 20px;
+    color: #007bff;
+  }
+  

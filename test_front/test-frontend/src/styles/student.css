@@ -1,0 +1,16 @@
+.student-page {
+    padding: 20px;
+  }
+  
+  .tables {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .left-table {
+    flex: 1;
+  }
+  
+  .right-table {
+    flex: 2;
+  }

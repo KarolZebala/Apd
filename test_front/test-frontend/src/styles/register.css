@@ -1,0 +1,27 @@
+.register-page {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .register-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .register-link {
+    display: block;
+    margin-top: 20px;
+    color: #007bff;
+  }
+  
+  .register-select {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
