@@ -56,7 +56,7 @@ services:
     image: apd.front
     container_name: apd.front
     build:
-      context: Frontend/test-frontend
+      context: test_front/test-frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
