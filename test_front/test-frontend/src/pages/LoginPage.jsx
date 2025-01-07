@@ -31,7 +31,7 @@ const LoginPage = () => {
       // Przekierowanie w zależności od roli
       if (role === "Student") {
         navigate("/student");
-      } else if (role === "Promoter") {
+      } else if (role === "Professor") {
         navigate("/promoter");
       } else {
         setError("Unknown role. Please contact the administrator.");

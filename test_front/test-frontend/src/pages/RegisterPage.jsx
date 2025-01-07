@@ -1,17 +1,17 @@
 // RegisterPage.jsx
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import FormField from '../components/FormField';
-import { register } from '../api/userApi';
-import '../styles/register.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import FormField from "../components/FormField";
+import { register } from "../api/userApi";
+import "../styles/register.css";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'student',
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "student",
   });
 
   const [error, setError] = useState(null);
@@ -65,15 +65,17 @@ const RegisterPage = () => {
         label="Powtórz hasło"
         type="password"
         value={formData.confirmPassword}
-        onChange={(value) => setFormData({ ...formData, confirmPassword: value })}
+        onChange={(value) =>
+          setFormData({ ...formData, confirmPassword: value })
+        }
       />
       <select
         className="register-select"
         value={formData.role}
         onChange={(e) => setFormData({ ...formData, role: e.target.value })}
       >
-        <option value="student">Student</option>
-        <option value="profesor">Profesor</option>
+        <option value="Student">Student</option>
+        <option value="Professor">Profesor</option>
       </select>
       <button
         className="register-button"
@@ -84,7 +86,9 @@ const RegisterPage = () => {
       </button>
       {error && <p className="error-message">{error}</p>}
       {message && <p className="success-message">{message}</p>}
-      <Link to="/login" className="register-link">Logowanie</Link>
+      <Link to="/login" className="register-link">
+        Logowanie
+      </Link>
     </div>
   );
 };
