@@ -32,3 +32,8 @@ export const logout = () => {
 export const getToken = () => {
   return localStorage.getItem("jwtToken");
 };
+
+export const isAuthenticated = () => {
+  const token = getToken();
+  return !!token; // Zwraca true, jeśli token istnieje
+};
