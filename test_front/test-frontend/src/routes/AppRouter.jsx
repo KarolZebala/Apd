@@ -1,10 +1,14 @@
-// src/routes/AppRouter.jsx
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage';
-import RegisterPage from '../pages/RegisterPage';
-import StudentPage from '../pages/StudentPage';
-import PromoterPage from '../pages/PromoterPage';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+import StudentPage from "../pages/StudentPage";
+import PromoterPage from "../pages/PromoterPage";
 
 const AppRouter = () => {
   return (
