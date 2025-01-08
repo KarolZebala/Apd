@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Adp.Domain.BuildingBlocks;
 using Apd.Api.Options;
 using Apd.Api.RequestModels;
 using Microsoft.AspNetCore.Identity;
@@ -15,11 +16,17 @@ namespace Apd.Api.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IEmailSender _emailSender;
     private readonly SecretOptions _secretOptions;
-    
-    public UserController(UserManager<IdentityUser> userManager, IOptions<SecretOptions> secretOptions)
+
+    public UserController(
+        UserManager<IdentityUser> userManager,
+        IOptions<SecretOptions> secretOptions,
+        IEmailSender emailSender
+    )
     {
         _userManager = userManager;
+        _emailSender = emailSender;
         _secretOptions = secretOptions.Value;
     }
 
@@ -74,10 +81,10 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("Search")]
-    public async Task<IActionResult> Search(string searchString,  string role)
+    public async Task<IActionResult> Search(string searchString, string role)
     {
         var usersInRole = await _userManager.GetUsersInRoleAsync(role);
-        
+
         var filteredUsers = usersInRole
             .Where(u => u.UserName.Contains(searchString))
             .Take(10)
@@ -87,7 +94,22 @@ public class UserController : ControllerBase
                 UserName = x.UserName,
                 Email = x.Email,
             }).ToArray();
-        
+
         return Ok(filteredUsers);
     }
+
+    [HttpPost("SendEmail")]
+    public async Task<IActionResult> SendEmail(string toEmail, string subject, string body)
+    {
+        try
+        {
+            await _emailSender.SendEmailAsync(toEmail, subject, body);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
+
 }

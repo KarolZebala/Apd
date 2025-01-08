@@ -1,5 +1,8 @@
 using System.Text;
+using Adp.Domain;
+using Adp.Domain.BuildingBlocks;
 using Adp.Domain.Diploma;
+using Adp.Infrastructure.BuildingBlocks;
 using Adp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Adp.Infrastructure.BuildingBlocks;
+using Adp.Infrastructure.Repositories.User;
 
 namespace Adp.Infrastructure;
 
@@ -29,6 +34,8 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddScoped<IDiplomaRepository, DiplomaRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IEmailSender, EmailSender>();
         
         return services;
     }

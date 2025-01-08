@@ -1,6 +1,8 @@
 using Adp.Application.Dto;
 using Adp.Application.Extensions;
 using Adp.Application.RequestModel;
+using Adp.Domain;
+using Adp.Domain.BuildingBlocks;
 using Adp.Domain.Diploma;
 using Apd.Api.Workflows;
 using Elsa.Models;
@@ -24,6 +26,10 @@ public class DiplomaService : IDiplomaService
     private readonly IWorkflowDispatcher _workflowDispatcher;
     private readonly IWorkflowRunner _workflowRunner;*/
     private readonly IBuildsAndStartsWorkflow _buildsAndStartsWorkflow;
+
+    private readonly IUserRepository _userRepository;
+
+    private readonly IEmailSender _emailSender;
     /*private readonly IWorkflowFactory _workflowFactory;
     private readonly IWorkflowRegistry _workflowRegistry;*/
 
@@ -34,7 +40,9 @@ public class DiplomaService : IDiplomaService
         IWorkflowRunner workflowRunner,*/
         IBuildsAndStartsWorkflow buildsAndStartsWorkflow
         /*IWorkflowFactory workflowFactory,
-        IWorkflowRegistry workflowRegistry*/
+        IWorkflowRegistry workflowRegistry*/,
+        IUserRepository userRepository,
+        IEmailSender emailSender
     )
     {
         _diplomaRepository = diplomaRepository;
@@ -42,6 +50,8 @@ public class DiplomaService : IDiplomaService
         _workflowDispatcher = workflowDispatcher;
         _workflowRunner = workflowRunner;*/
         _buildsAndStartsWorkflow = buildsAndStartsWorkflow;
+        _userRepository = userRepository;
+        _emailSender = emailSender;
         /*_workflowFactory = workflowFactory;
         _workflowRegistry = workflowRegistry;*/
     }
@@ -62,6 +72,11 @@ public class DiplomaService : IDiplomaService
 
         await _diplomaRepository.SaveChangesAsync();
         
+        var student = await _userRepository.GetByIdAsync(diploma.StudentId);
+
+        var emailMessage =
+            $"Dodano prace dyplomową {diploma.DiplomaId}. Zaloguj się do systemu APD w celu jej uzupełnienia";
+        await _emailSender.SendEmailAsync(student.Email, "Dodano Twoją prace dyplomową do systemu.", emailMessage);
         
         // Dispatch workflow
         /*
@@ -72,7 +87,7 @@ public class DiplomaService : IDiplomaService
 
         
         //dziala
-        var a =await _buildsAndStartsWorkflow.BuildAndStartWorkflowAsync<DiplomaWorkflow>();
+        //var a =await _buildsAndStartsWorkflow.BuildAndStartWorkflowAsync<DiplomaWorkflow>();
         
         //testowanie żeby uruchomić inaczej na razie się nie udało
         /*var workflowBluePrint = await _workflowRegistry.FindByNameAsync("TestWorkflow", VersionOptions.All);

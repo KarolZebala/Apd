@@ -26,5 +26,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Adp.Domain\Adp.Domain.csproj" />
     </ItemGroup>
-
 </Project>
