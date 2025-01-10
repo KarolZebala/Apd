@@ -43,9 +43,18 @@ public sealed class Diploma
 
     private HashSet<DiplomaAttachment> _attachments;
 
+    public IReadOnlyCollection<DiplomaTag> Tags
+    {
+        get => _tags;
+        private set => _tags = new HashSet<DiplomaTag>(value);
+    }
+
+    private HashSet<DiplomaTag> _tags;
+
     private Diploma()
     {
         _attachments = new HashSet<DiplomaAttachment>();
+        _tags = new HashSet<DiplomaTag>();
     }
 
     private Diploma(
@@ -90,5 +99,15 @@ public sealed class Diploma
             data: attachmentData
         );
         _attachments.Add(attachment);
+    }
+
+    public void AddTag(
+        string tagName
+    )
+    {
+        var tag = DiplomaTag.Create(
+            name: tagName
+        );
+        _tags.Add(tag);
     }
 }
