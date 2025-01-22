@@ -14,9 +14,10 @@ namespace Adp.Application.Services;
 public interface IDiplomaService
 {
     Task<long> AddDiploma(CreateDiplomaRequestModel requestModel);
-    Task<DiplomaDto> GetDiplomaById(long diplomaId);
+    Task<DiplomaDto?> GetDiplomaById(long diplomaId);
     Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel);
     Task<DiplomaDto[]> SearchDiploma(DiplomaSearchRequestModel requestModel);
+    
 }
 
 public class DiplomaService : IDiplomaService
@@ -126,15 +127,13 @@ public class DiplomaService : IDiplomaService
         return diploma.DiplomaId;
     }
 
-    public async Task<DiplomaDto> GetDiplomaById(long diplomaId)
+    public async Task<DiplomaDto?> GetDiplomaById(long diplomaId)
     {
         var diploma = await _diplomaRepository.GetByIdAsync(diplomaId);
-        
-        if (diploma == null)
+        if (diploma is null)
         {
-            throw new ArgumentException("Missing diploma");
+            return null;
         }
-        
         var diplomaDto = diploma.ToDto();
         
         return diplomaDto;
@@ -183,5 +182,19 @@ public class DiplomaService : IDiplomaService
         );
 
         return diplomas.ToDto();
+    }
+
+    public async Task AddReview(CreateDiplomaReviewRequestModel requestModel)
+    {
+        var diploma = await _diplomaRepository.GetByIdAsync(requestModel.DiplomaId);
+        
+        if (diploma == null)
+        {
+            throw new ArgumentException("Not found diploma");
+        }
+        
+        diploma.AddReview(requestModel.ReviewerId, requestModel.ReviewContent);
+        
+        await _diplomaRepository.SaveChangesAsync();
     }
 }

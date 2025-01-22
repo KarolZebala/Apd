@@ -45,6 +45,8 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
         {
             entity.ToTable("Diploma");
             entity.HasKey(x => x.DiplomaId);
+            
+            entity.HasMany(x => x.Reviews).WithOne().HasForeignKey(x => x.DiplomaId);
             entity.HasMany(x => x.Attachments).WithOne().HasForeignKey(x => x.DiplomaId);
         });
 
@@ -53,6 +55,12 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             entity.ToTable("DiplomaAttachment");
             entity.HasKey(x => x.DiplomaAttachmentId);
             entity.OwnsOne(x => x.Data);
+        });
+        
+        modelBuilder.Entity<DiplomaReview>(entity =>
+        {
+            entity.ToTable("DiplomaReview");
+            entity.HasKey(x => x.DiplomaReviewId);
         });
         
         base.OnModelCreating(modelBuilder);
@@ -66,6 +74,7 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
     }
 
     public DbSet<Diploma?> Diplomas { get; set; }
+    public DbSet<DiplomaReview?> Reviews { get; set; }
 }
 
 public class WorkflowDbContextFactory : IDesignTimeDbContextFactory<WorkflowDbContext>

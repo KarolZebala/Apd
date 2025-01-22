@@ -35,6 +35,7 @@ public static class DependencyInjection
 
         services.AddScoped<IDiplomaRepository, DiplomaRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDiplomaReviewRepository, DiplomaReviewRepository>();
         services.AddScoped<IEmailSender, EmailSender>();
         
         return services;

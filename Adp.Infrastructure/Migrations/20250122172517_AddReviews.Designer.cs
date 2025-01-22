@@ -3,6 +3,7 @@ using System;
 using Adp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Adp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApdDbContext))]
-    partial class ApdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250122172517_AddReviews")]
+    partial class AddReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,32 +100,6 @@ namespace Adp.Infrastructure.Migrations
                     b.HasIndex("DiplomaId");
 
                     b.ToTable("DiplomaAttachment", (string)null);
-                });
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
-                {
-                    b.Property<long>("DiplomaReviewId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaReviewId"));
-
-                    b.Property<long>("DiplomaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ReviewContent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ReviewerId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("DiplomaReviewId");
-
-                    b.HasIndex("DiplomaId");
-
-                    b.ToTable("DiplomaReview", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -321,6 +298,38 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Adp.Domain.Diploma.Diploma", b =>
+                {
+                    b.OwnsMany("Adp.Domain.Diploma.DiplomaReview", "Reviews", b1 =>
+                        {
+                            b1.Property<long>("DiplomaId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long>("DiplomaReviewId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bigint");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<long>("DiplomaReviewId"));
+
+                            b1.Property<string>("ReviewContent")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ReviewerId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("DiplomaId", "DiplomaReviewId");
+
+                            b1.ToTable("DiplomaReview");
+
+                            b1.WithOwner()
+                                .HasForeignKey("DiplomaId");
+                        });
+
+                    b.Navigation("Reviews");
+                });
+
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaAttachment", b =>
                 {
                     b.HasOne("Adp.Domain.Diploma.Diploma", null)
@@ -347,15 +356,6 @@ namespace Adp.Infrastructure.Migrations
                         });
 
                     b.Navigation("Data")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
-                {
-                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("DiplomaId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -413,8 +413,6 @@ namespace Adp.Infrastructure.Migrations
             modelBuilder.Entity("Adp.Domain.Diploma.Diploma", b =>
                 {
                     b.Navigation("Attachments");
-
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }
