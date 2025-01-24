@@ -3,7 +3,7 @@ namespace Adp.Domain.Diploma;
 public sealed class DiplomaTag
 {
     public static DiplomaTag Create(
-        string name,
+        string name
     )
     {
         return new DiplomaTag(
