@@ -9,67 +9,84 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const navigate = useNavigate();
 
   const isFormValid = username && password;
 
   const handleLogin = async () => {
+    setIsLocked(true); // Blokowanie interakcji
     try {
       const token = await login(username, password);
-      console.log("Received token:", token); // Logowanie tokenu
+      console.log("Received token:", token);
 
       localStorage.setItem("jwtToken", token);
 
-      // Dekodowanie tokenu JWT
       const decoded = jwtDecode(token);
-      console.log("Decoded token:", decoded); // Logowanie zawartości tokenu
+      console.log("Decoded token:", decoded);
 
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      console.log("User role:", role); // Logowanie roli użytkownika
+      console.log("User role:", role);
 
-      // Przekierowanie w zależności od roli
-      if (role === "Student") {
-        navigate("/student");
-      } else if (role === "Professor") {
-        navigate("/promoter");
-      } else {
-        setError("Unknown role. Please contact the administrator.");
-      }
-
+      setIsSuccess(true);
       setError(null);
+
+      setTimeout(() => {
+        if (role === "Student") {
+          navigate("/student");
+        } else if (role === "Professor") {
+          navigate("/promoter");
+        } else {
+          setError("Nieznana rola. Skontaktuj się z administratorem.");
+          setIsLocked(false);
+        }
+      }, 3000);
     } catch (err) {
-      console.error("Error during login:", err.message);
-      setError("Invalid username or password");
+      console.error("Błąd podczas logowania:", err.message);
+      setError("Nieprawidłowa nazwa użytkownika lub hasło.");
+      setIsLocked(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <h1>Archiwum prac dyplomowych</h1>
-      <FormField
-        label="Login"
-        type="text"
-        value={username}
-        onChange={setUsername}
-      />
-      <FormField
-        label="Hasło"
-        type="password"
-        value={password}
-        onChange={setPassword}
-      />
-      <button
-        className="login-button"
-        onClick={handleLogin}
-        disabled={!isFormValid}
-      >
-        Zaloguj
-      </button>
-      {error && <p className="error-message">{error}</p>}
-      <Link to="/register" className="login-link">
-        Rejestracja
-      </Link>
+    <div className={`page-container ${isSuccess ? "dimmed" : ""}`}>
+      {isSuccess && (
+        <div className="success-message-overlay">
+          <p>Login successful!</p>
+        </div>
+      )}
+      {isLocked && <div className="interaction-blocker"></div>}
+      <div className="form-container">
+        <h1 className="form-title">Login</h1>
+        <FormField
+          label="Username"
+          type="text"
+          value={username}
+          onChange={setUsername}
+          disabled={isLocked}
+        />
+        <FormField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={setPassword}
+          disabled={isLocked}
+        />
+        <button
+          className="form-button"
+          onClick={handleLogin}
+          disabled={!isFormValid || isLocked}
+        >
+          Login
+        </button>
+        {error && <p className="form-field-error-message">{error}</p>}
+
+        <Link to="/register" className="form-link-button" disabled={isLocked}>
+          Go to Register
+        </Link>
+      </div>
     </div>
   );
 };

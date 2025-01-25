@@ -9,6 +9,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import StudentPage from "../pages/StudentPage";
 import PromoterPage from "../pages/PromoterPage";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const AppRouter = () => {
   return (
@@ -17,8 +18,24 @@ const AppRouter = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/student" element={<StudentPage />} />
-        <Route path="/promoter" element={<PromoterPage />} />
+
+        {/* Zabezpieczone strony */}
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute>
+              <StudentPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/promoter"
+          element={
+            <ProtectedRoute>
+              <PromoterPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
