@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:8080/User"; // Zmień na pełną ścieżkę backendu, jeśli korzystasz z innego serwera
+const apiUrl = "http://localhost:8080"; // Zmień na pełną ścieżkę backendu, jeśli korzystasz z innego serwera
 
 // Funkcja logowania
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${apiUrl}/Login`, {
+    const response = await axios.post(`${apiUrl}/User/Login`, {
       username,
       password,
     });
@@ -20,7 +20,7 @@ export const login = async (username, password) => {
 export const register = async (username, email, password, role) => {
   try {
     const response = await axios.post(
-      `${apiUrl}/Register`,
+      `${apiUrl}/User/Register`,
       {
         username,
         email,
@@ -38,5 +38,33 @@ export const register = async (username, email, password, role) => {
     console.error("Error registering:", error.response?.data || error.message);
     // Rzuć obiekt błędu, aby komponent mógł go obsłużyć
     throw error.response?.data || { message: "Błąd podczas rejestracji" };
+  }
+};
+
+// Funkcja tworzenia dyplomu
+export const createDiploma = async (diplomaData) => {
+  try {
+    const response = await axios.post(`${apiUrl}/Diploma/AddDiploma`, diplomaData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; // Zwraca odpowiedź z backendu
+  } catch (error) {
+    throw error.response?.data || { message: "Błąd podczas tworzenia dyplomu." };
+  }
+};
+
+// Funkcja szukania dyplomu
+export const searchDiploma = async (diplomaData) => {
+  try {
+    const response = await axios.post(`${apiUrl}/Diploma/SearchDiploma`, diplomaData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; // Zwraca odpowiedź z backendu
+  } catch (error) {
+    throw error.response?.data || { message: "Bład podczas szukania dyplomu." };
   }
 };
