@@ -1,7 +1,6 @@
-// userApi.js
 import axios from "axios";
 
-const apiUrl = "/User"; // Aktualna ścieżka do backendu
+const apiUrl = "http://localhost:8080/User"; // Zmień na pełną ścieżkę backendu, jeśli korzystasz z innego serwera
 
 // Funkcja logowania
 export const login = async (username, password) => {
@@ -12,7 +11,8 @@ export const login = async (username, password) => {
     });
     return response.data; // Zwraca token
   } catch (error) {
-    throw error.response?.data || "Error logging in";
+    // Rzuć obiekt błędu, aby komponent mógł go obsłużyć
+    throw error.response?.data || { message: "Błąd podczas logowania" };
   }
 };
 
@@ -29,13 +29,14 @@ export const register = async (username, email, password, role) => {
       },
       {
         headers: {
-          "Content-Type": "application/json", // Domyślny nagłówek
+          "Content-Type": "application/json",
         },
       }
     );
     return response.data; // Zwraca odpowiedź z backendu
   } catch (error) {
     console.error("Error registering:", error.response?.data || error.message);
-    throw error.response?.data || "Error registering";
+    // Rzuć obiekt błędu, aby komponent mógł go obsłużyć
+    throw error.response?.data || { message: "Błąd podczas rejestracji" };
   }
 };
