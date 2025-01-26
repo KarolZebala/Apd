@@ -10,6 +10,7 @@ import RegisterPage from "../pages/RegisterPage";
 import StudentPage from "../pages/StudentPage";
 import PromoterPage from "../pages/PromoterPage";
 import ProtectedRoute from "../components/ProtectedRoute";
+import CreateDiplomaPage from '../pages/CreateDiplomaPage';
 
 const AppRouter = () => {
   return (
@@ -33,6 +34,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <PromoterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-diploma"
+          element={
+            <ProtectedRoute>
+              <CreateDiplomaPage />
             </ProtectedRoute>
           }
         />

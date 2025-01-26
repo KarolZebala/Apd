@@ -1,5 +1,6 @@
 // src/pages/PromoterPage.jsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Table from '../components/Table';
@@ -13,6 +14,9 @@ const PromoterPage = ({ username, onLogout, promoterData = { promotions: [], rev
     promotions: [],
     reviews: [],
   });
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     // Ustaw przykładowe dane w przypadku braku danych z backendu
@@ -106,6 +110,11 @@ const PromoterPage = ({ username, onLogout, promoterData = { promotions: [], rev
           </div>
         </div>
       )}
+
+      <button type="button" onClick={() => navigate("/create-diploma")} className='add-diploma-button' >
+        Add Diploma
+      </button>
+
       <Footer />
     </div>
   );

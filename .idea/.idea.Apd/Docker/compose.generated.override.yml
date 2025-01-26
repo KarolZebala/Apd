@@ -1,0 +1,39 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.9"
+services:
+  apd.api:
+    build:
+      context: "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd"
+      dockerfile: "Apd.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Apd.Api.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "apd.api:dev"
+    ports: []
+    volumes:
+    - "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd/Apd.Api:/app:rw"
+    - "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd:/src:rw"
+    - "/Users/florosprout/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"
+  apd.migrations:
+    build:
+      context: "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd"
+      dockerfile: "Apd.Api/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Apd.Api.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "apd.api:dev"
+    ports: []
+    volumes:
+    - "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd/Apd.Api:/app:rw"
+    - "/Users/florosprout/Desktop/APSI/__NOWE_Z_GITA/Apd:/src:rw"
+    - "/Users/florosprout/.nuget/packages:/root/.nuget/packages"
+    working_dir: "/app"
