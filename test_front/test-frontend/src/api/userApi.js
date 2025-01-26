@@ -51,6 +51,20 @@ export const createDiploma = async (diplomaData) => {
     });
     return response.data; // Zwraca odpowiedź z backendu
   } catch (error) {
-    throw error.response?.data || { message: "Failed to create diploma." };
+    throw error.response?.data || { message: "Błąd podczas tworzenia dyplomu." };
+  }
+};
+
+// Funkcja szukania dyplomu
+export const searchDiploma = async (diplomaData) => {
+  try {
+    const response = await axios.post(`${apiUrl}/Diploma/SearchDiploma`, diplomaData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; // Zwraca odpowiedź z backendu
+  } catch (error) {
+    throw error.response?.data || { message: "Bład podczas szukania dyplomu." };
   }
 };
