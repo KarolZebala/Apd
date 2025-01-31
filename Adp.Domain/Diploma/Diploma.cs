@@ -34,7 +34,7 @@ public sealed class Diploma
     public string StudentId { get; private set; }
     public string PromoterId { get; private set; }
     public string ReviewerId { get; private set; }
-
+    
     public IReadOnlyCollection<DiplomaAttachment> Attachments
     {
         get => _attachments;
@@ -42,10 +42,19 @@ public sealed class Diploma
     }
 
     private HashSet<DiplomaAttachment> _attachments;
+    
+    public IReadOnlyCollection<DiplomaReview> Reviews
+    {
+        get => _reviews;
+        private set => _reviews = new HashSet<DiplomaReview>(value);
+    }
+
+    private HashSet<DiplomaReview> _reviews;
 
     private Diploma()
     {
         _attachments = new HashSet<DiplomaAttachment>();
+        _reviews = new HashSet<DiplomaReview>();
     }
 
     private Diploma(
@@ -90,5 +99,18 @@ public sealed class Diploma
             data: attachmentData
         );
         _attachments.Add(attachment);
+    }
+
+    public void AddReview(
+        string reviewerId,
+        string reviewContent
+    )
+    {
+        var review = DiplomaReview.CreateNew(
+            DiplomaId,
+            reviewerId,
+            reviewContent
+        );
+        _reviews.Add(review);
     }
 }
