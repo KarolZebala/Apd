@@ -66,7 +66,7 @@ public class ExamController : ControllerBase
         }
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("SearchExams")]
     public async Task<IActionResult> SearchExams(SearchExamRequestModel requestModel)
     {

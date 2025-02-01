@@ -26,7 +26,7 @@ public class ExamRepository(ApdDbContext _context) : IExamRepository
 
         if (pageNumber.HasValue && pageSize.HasValue)
         {
-            query = query.Skip((pageNumber.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            query = query.Skip((pageNumber.Value) * pageSize.Value).Take(pageSize.Value);
         }
         
         var res= query.ToArray();

@@ -118,8 +118,6 @@ public class ExamService : IExamService
         {
             throw new ArgumentException($"Not found reviewer with id: {diploma.ReviewerId}");
         }
-        
-        await _examRepository.AddAsync(exam);
 
         await _diplomaRepository.SaveChangesAsync();
         
