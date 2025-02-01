@@ -125,6 +125,28 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("DiplomaReview", (string)null);
                 });
 
+            modelBuilder.Entity("Adp.Domain.Exam.Exam", b =>
+                {
+                    b.Property<long>("ExamId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ExamId"));
+
+                    b.Property<long>("DiplomaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ExamDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Score")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ExamId");
+
+                    b.ToTable("Exam", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
