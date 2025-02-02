@@ -178,7 +178,8 @@ public class DiplomaService : IDiplomaService
             requestModel.ReviewerIds,
             requestModel.Status,
             requestModel.PageNumber,
-            requestModel.PageSize
+            requestModel.PageSize,
+            requestModel.Tag
         );
 
         return diplomas.ToDto();

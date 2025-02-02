@@ -3,6 +3,7 @@ using System;
 using Adp.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Adp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApdDbContext))]
-    partial class ApdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250124105442_tag_migration")]
+    partial class tag_migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +102,6 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("DiplomaAttachment", (string)null);
                 });
 
-
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
                 {
                     b.Property<long>("DiplomaTagId")
@@ -107,15 +109,6 @@ namespace Adp.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaTagId"));
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
-                {
-                    b.Property<long>("DiplomaReviewId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaReviewId"));
-
 
                     b.Property<long>("DiplomaId")
                         .HasColumnType("bigint");
@@ -129,43 +122,6 @@ namespace Adp.Infrastructure.Migrations
                     b.HasIndex("DiplomaId");
 
                     b.ToTable("DiplomaTag");
-
-                    b.Property<string>("ReviewContent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ReviewerId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("DiplomaReviewId");
-
-                    b.HasIndex("DiplomaId");
-
-                    b.ToTable("DiplomaReview", (string)null);
-                });
-
-            modelBuilder.Entity("Adp.Domain.Exam.Exam", b =>
-                {
-                    b.Property<long>("ExamId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ExamId"));
-
-                    b.Property<long>("DiplomaId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("ExamDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("Score")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ExamId");
-
-                    b.ToTable("Exam", (string)null);
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -397,12 +353,6 @@ namespace Adp.Infrastructure.Migrations
                 {
                     b.HasOne("Adp.Domain.Diploma.Diploma", null)
                         .WithMany("Tags")
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
-                {
-                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
-                        .WithMany("Reviews")
-
                         .HasForeignKey("DiplomaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -464,8 +414,6 @@ namespace Adp.Infrastructure.Migrations
                     b.Navigation("Attachments");
 
                     b.Navigation("Tags");
-                    
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

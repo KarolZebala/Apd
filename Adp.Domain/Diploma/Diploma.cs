@@ -51,10 +51,20 @@ public sealed class Diploma
 
     private HashSet<DiplomaReview> _reviews;
 
+    public IReadOnlyCollection<DiplomaTag> Tags
+    {
+        get => _tags;
+        private set => _tags = new HashSet<DiplomaTag>(value);
+    }
+
+    private HashSet<DiplomaTag> _tags;
+
     private Diploma()
     {
         _attachments = new HashSet<DiplomaAttachment>();
+        _tags = new HashSet<DiplomaTag>();
         _reviews = new HashSet<DiplomaReview>();
+
     }
 
     private Diploma(
@@ -100,6 +110,18 @@ public sealed class Diploma
         );
         _attachments.Add(attachment);
     }
+
+
+    public void AddTag(
+        long diplomaId,
+        string tagName
+    )
+    {
+        var tag = DiplomaTag.Create(
+            diplomaId: diplomaId,
+            name: tagName
+        );
+        _tags.Add(tag);
 
     public void AddReview(
         string reviewerId,

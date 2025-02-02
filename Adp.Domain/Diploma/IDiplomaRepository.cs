@@ -14,6 +14,7 @@ public interface IDiplomaRepository
         string[]? reviewerIds,
         string? status,
         int pageNumber,
-        int pageSize
+        int pageSize,
+        string? tag
     );
 }
