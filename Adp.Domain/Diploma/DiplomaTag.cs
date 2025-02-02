@@ -3,10 +3,12 @@ namespace Adp.Domain.Diploma;
 public sealed class DiplomaTag
 {
     public static DiplomaTag Create(
+        long diplomaId,
         string name
     )
     {
         return new DiplomaTag(
+            diplomaId: diplomaId,
             name: name
         );
     }
@@ -22,9 +24,11 @@ public sealed class DiplomaTag
     }
     
     private DiplomaTag(
+        long diplomaId,
         string name
     )
     {
+        DiplomaId = diplomaId;
         Name = name;
     }
 }

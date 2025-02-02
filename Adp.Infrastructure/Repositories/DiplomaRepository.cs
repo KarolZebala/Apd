@@ -36,10 +36,12 @@ public class DiplomaRepository(ApdDbContext _context) : IDiplomaRepository
         string[]? reviewerIds, 
         string? status,
         int pageNumber,
-        int pageSize
+        int pageSize,
+        string? tag
     )
     {
         IQueryable<Diploma> query = _context.Diplomas
+            .Include(x => x.Tags)
             .AsNoTracking()
             .AsQueryable();
 
@@ -66,6 +68,11 @@ public class DiplomaRepository(ApdDbContext _context) : IDiplomaRepository
         if (!string.IsNullOrWhiteSpace(status))
         {
             query = query.Where(d => d.Status == status);
+        }
+
+        if (!string.IsNullOrWhiteSpace(tag))
+        {
+            query = query.Where(x => x.Tags.Any(x => x.Name.Contains(tag)));
         }
 
         if (pageNumber > 0 && pageSize > 0)

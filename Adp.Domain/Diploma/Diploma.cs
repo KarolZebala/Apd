@@ -102,10 +102,12 @@ public sealed class Diploma
     }
 
     public void AddTag(
+        long diplomaId,
         string tagName
     )
     {
         var tag = DiplomaTag.Create(
+            diplomaId: diplomaId,
             name: tagName
         );
         _tags.Add(tag);
