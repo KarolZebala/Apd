@@ -107,6 +107,7 @@ namespace Adp.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaTagId"));
+                });
 
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
                 {
@@ -396,7 +397,9 @@ namespace Adp.Infrastructure.Migrations
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
                 {
                     b.HasOne("Adp.Domain.Diploma.Diploma", null)
-                        .WithMany("Tags")
+                        .WithMany("Tags");
+        
+                });
 
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
                 {

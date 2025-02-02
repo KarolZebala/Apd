@@ -122,6 +122,7 @@ public sealed class Diploma
             name: tagName
         );
         _tags.Add(tag);
+    }
 
     public void AddReview(
         string reviewerId,
