@@ -2,6 +2,7 @@ using System.Text;
 using Adp.Domain;
 using Adp.Domain.BuildingBlocks;
 using Adp.Domain.Diploma;
+using Adp.Domain.Exam;
 using Adp.Infrastructure.BuildingBlocks;
 using Adp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +36,8 @@ public static class DependencyInjection
 
         services.AddScoped<IDiplomaRepository, DiplomaRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDiplomaReviewRepository, DiplomaReviewRepository>();
+        services.AddScoped<IExamRepository, ExamRepository>();
         services.AddScoped<IEmailSender, EmailSender>();
         
         return services;

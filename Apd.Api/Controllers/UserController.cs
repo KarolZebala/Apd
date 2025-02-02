@@ -38,17 +38,30 @@ public class UserController : ControllerBase
             UserName = request.Username,
             Email = request.Email,
         };
+
+        // Tworzenie użytkownika
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
         {
-            return BadRequest(result.Errors);
+            // Przetwórz listę błędów
+            var errors = result.Errors.Select(e => e.Description).ToList();
+
+            // Zwróć listę błędów w odpowiedzi
+            return BadRequest(new
+            {
+                message = "Rejestracja nie powiodła się",
+                errors = errors
+            });
         }
 
+        // Przypisz rolę użytkownikowi
         await _userManager.AddToRoleAsync(user, request.Role);
 
-        return Ok(new { message = "User registered successfully" });
+        // Zwróć sukces
+        return Ok(new { message = "Rejestracja zakończona sukcesem" });
     }
+
 
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestModel request)

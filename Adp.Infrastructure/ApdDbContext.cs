@@ -1,4 +1,5 @@
 using Adp.Domain.Diploma;
+using Adp.Domain.Exam;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -46,6 +47,8 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
         {
             entity.ToTable("Diploma");
             entity.HasKey(x => x.DiplomaId);
+            
+            entity.HasMany(x => x.Reviews).WithOne().HasForeignKey(x => x.DiplomaId);
             entity.HasMany(x => x.Attachments).WithOne().HasForeignKey(x => x.DiplomaId);
             entity.HasMany(x => x.Tags).WithOne().HasForeignKey(x => x.DiplomaId);
         });
@@ -63,6 +66,18 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             entity.HasKey(x => x.DiplomaTagId);
         });
         
+        modelBuilder.Entity<DiplomaReview>(entity =>
+        {
+            entity.ToTable("DiplomaReview");
+            entity.HasKey(x => x.DiplomaReviewId);
+        });
+        
+        modelBuilder.Entity<Exam>(entity =>
+        {
+            entity.ToTable("Exam");
+            entity.HasKey(x => x.ExamId);
+        });
+        
         base.OnModelCreating(modelBuilder);
     }
     
@@ -74,6 +89,8 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
     }
 
     public DbSet<Diploma?> Diplomas { get; set; }
+    public DbSet<DiplomaReview?> Reviews { get; set; }
+    public DbSet<Exam?> Exams { get; set; }
 }
 
 public class WorkflowDbContextFactory : IDesignTimeDbContextFactory<WorkflowDbContext>

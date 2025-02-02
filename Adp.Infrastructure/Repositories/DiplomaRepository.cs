@@ -20,6 +20,7 @@ public class DiplomaRepository(ApdDbContext _context) : IDiplomaRepository
     {
         return await _context.Diplomas
             .Include(x => x.Attachments)
+            .Include(x => x.Reviews)
             .FirstOrDefaultAsync(x => x.DiplomaId == id);
     }
 

@@ -1,21 +1,149 @@
-.login-page {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  .login-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .login-link {
-    display: block;
-    margin-top: 20px;
-    color: #007bff;
-  }
-  
+/* Ogólne ustawienia */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Strona logowania */
+.page-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.page-container.dimmed {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Kontener formularza */
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Pola formularza */
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Przycisk */
+.form-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
+
+.form-button:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+/* Link - Go to Register jako przycisk */
+.form-link-button {
+  display: block;
+  margin-top: 20px;
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.form-link-button:hover {
+  background-color: #0056b3;
+}
+
+.form-link-button:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+/* Link */
+.form-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+/* Overlay to block interactions */
+.interaction-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+  pointer-events: all;
+}
+
+/* Styl komunikatu sukcesu */
+.success-message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px 40px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #28a745;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

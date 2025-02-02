@@ -25,6 +25,12 @@ public class DiplomaController : ControllerBase
         try
         {
             var diploma = await _diplomaService.GetDiplomaById(diplomaId);
+            
+            if (diploma == null)
+            {
+                return NotFound();
+            }
+            
             return Ok(diploma);
         }
         catch (Exception e)
