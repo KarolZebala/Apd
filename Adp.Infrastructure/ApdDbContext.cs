@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Elsa.Persistence.EntityFramework.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Reflection.Metadata;
 
 namespace Adp.Infrastructure;
 
@@ -46,6 +47,7 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             entity.ToTable("Diploma");
             entity.HasKey(x => x.DiplomaId);
             entity.HasMany(x => x.Attachments).WithOne().HasForeignKey(x => x.DiplomaId);
+            entity.HasMany(x => x.Tags).WithOne().HasForeignKey(x => x.DiplomaId);
         });
 
         modelBuilder.Entity<DiplomaAttachment>(entity =>
@@ -53,6 +55,12 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             entity.ToTable("DiplomaAttachment");
             entity.HasKey(x => x.DiplomaAttachmentId);
             entity.OwnsOne(x => x.Data);
+        });
+
+        modelBuilder.Entity<DiplomaTag>(entity =>
+        {
+            entity.ToTable("DiplomaTag");
+            entity.HasKey(x => x.DiplomaTagId);
         });
         
         base.OnModelCreating(modelBuilder);
