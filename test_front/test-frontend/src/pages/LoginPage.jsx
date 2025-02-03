@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
-import { login } from "../api/userApi";
+import { login, verifyUserRole } from "../api/userApi";
 import { jwtDecode } from "jwt-decode";
 import "../styles/login.css";
 
@@ -16,19 +16,15 @@ const LoginPage = () => {
   const isFormValid = username && password;
 
   const handleLogin = async () => {
-    setIsLocked(true); // Blokowanie interakcji
+    setIsLocked(true);
     try {
       const token = await login(username, password);
-      console.log("Received token:", token);
 
       localStorage.setItem("jwtToken", token);
-
       const decoded = jwtDecode(token);
-      console.log("Decoded token:", decoded);
 
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      console.log("User role:", role);
 
       setIsSuccess(true);
       setError(null);
@@ -45,7 +41,7 @@ const LoginPage = () => {
       }, 3000);
     } catch (err) {
       console.error("Błąd podczas logowania:", err.message);
-      setError("Nieprawidłowa nazwa użytkownika lub hasło.");
+      setError(err.message || "Nieprawidłowa nazwa użytkownika lub hasło.");
       setIsLocked(false);
     }
   };

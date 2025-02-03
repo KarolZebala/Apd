@@ -44,27 +44,67 @@ export const register = async (username, email, password, role) => {
 // Funkcja tworzenia dyplomu
 export const createDiploma = async (diplomaData) => {
   try {
-    const response = await axios.post(`${apiUrl}/Diploma/AddDiploma`, diplomaData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+      `${apiUrl}/Diploma/AddDiploma`,
+      diplomaData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data; // Zwraca odpowiedź z backendu
   } catch (error) {
-    throw error.response?.data || { message: "Błąd podczas tworzenia dyplomu." };
+    throw (
+      error.response?.data || { message: "Błąd podczas tworzenia dyplomu." }
+    );
   }
 };
 
 // Funkcja szukania dyplomu
 export const searchDiploma = async (diplomaData) => {
   try {
-    const response = await axios.post(`${apiUrl}/Diploma/SearchDiploma`, diplomaData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+      `${apiUrl}/Diploma/SearchDiploma`,
+      diplomaData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data; // Zwraca odpowiedź z backendu
   } catch (error) {
     throw error.response?.data || { message: "Bład podczas szukania dyplomu." };
+  }
+};
+
+export const searchUsers = async (searchString, role) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/User/Search?searchString=${encodeURIComponent(
+        searchString
+      )}&role=${role}`
+    );
+    if (!response.ok) throw new Error("Error fetching users");
+    return await response.json(); // API powinno zwrócić listę użytkowników
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    return [];
+  }
+};
+
+export const getUserIdByUsernameAndRole = async (username, role) => {
+  try {
+    const users = await searchUsers(username, role);
+
+    if (users.length > 0) {
+      return users[0].id; // Zakładamy, że API zwraca tablicę i bierzemy pierwszy wynik
+    }
+
+    return null; // Jeśli użytkownik nie został znaleziony
+  } catch (error) {
+    console.error("Błąd podczas pobierania ID użytkownika:", error);
+    return null;
   }
 };
