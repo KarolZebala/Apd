@@ -1,9 +1,9 @@
-// CreateDiplomaPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDiploma } from "../api/userApi";
 import Header from "../components/Header";
-// import "../styles/create-diploma.css";
+import UserSearch from "../components/UserSearch";
+import "../styles/create-diploma.css";
 
 const CreateDiplomaPage = () => {
   const [formData, setFormData] = useState({
@@ -26,19 +26,21 @@ const CreateDiplomaPage = () => {
   const validateForm = () => {
     const errors = {};
     if (!formData.title) errors.title = "Title is required.";
-    if (!formData.studentId) errors.studentId = "Student ID is required.";
-    if (!formData.promoterId) errors.promoterId = "Promoter ID is required.";
-    if (!formData.reviewerId) errors.reviewerId = "Reviewer ID is required.";
+    if (!formData.studentId)
+      errors.studentId = "Student selection is required.";
+    if (!formData.promoterId)
+      errors.promoterId = "Promoter selection is required.";
+    if (!formData.reviewerId)
+      errors.reviewerId = "Reviewer selection is required.";
+
     if (!formData.createDate || isNaN(Date.parse(formData.createDate))) {
       errors.createDate = "Valid Create Date is required.";
     }
+
     return errors;
   };
 
-  const isFormValid = () => {
-    const errors = validateForm();
-    return Object.keys(errors).length === 0;
-  };
+  const isFormValid = () => Object.keys(validateForm()).length === 0;
 
   const handleCreate = async () => {
     const errors = validateForm();
@@ -48,23 +50,27 @@ const CreateDiplomaPage = () => {
     }
     setFormErrors({});
     setIsLoading(true);
-  
+
     try {
-      // Dopasowanie danych do struktury oczekiwanej przez backend
+      // Konwersja daty na wymagany format ISO 8601
+      const formattedDate = new Date(formData.createDate).toISOString();
+
+      // Upewniamy się, że ID są typu string
       const requestData = {
         title: formData.title,
         type: formData.type,
         departmentName: formData.departmentName,
         course: formData.course,
-        createDate: new Date(formData.createDate).toISOString(),
-        studentId: formData.studentId,
-        promoterId: formData.promoterId,
-        reviewerId: formData.reviewerId,
+        createDate: formattedDate,
+        studentId: String(formData.studentId),
+        promoterId: String(formData.promoterId),
+        reviewerId: String(formData.reviewerId),
       };
-  
-      // Wywołanie funkcji API z poprawną strukturą danych
+
+      console.log("Wysyłane dane do API:", requestData); // Debug: sprawdzenie wysyłanych danych
+
       await createDiploma(requestData);
-  
+
       setIsSuccess(true);
       setIsLocked(true);
       setTimeout(() => {
@@ -72,8 +78,9 @@ const CreateDiplomaPage = () => {
         navigate("/promoter");
       }, 3000);
     } catch (err) {
+      console.error("Błąd z API:", err.response || err); // Debug: pełna odpowiedź z błędem
       setFormErrors({
-        general: err.response?.data?.title || "Failed to create diploma.",
+        general: err.response?.data?.message || "Failed to create diploma.",
       });
     } finally {
       setIsLoading(false);
@@ -100,11 +107,15 @@ const CreateDiplomaPage = () => {
               type="text"
               name="title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
               disabled={isLocked}
               className="large-input"
             />
-            {formErrors.title && <p className="form-field-error-message">{formErrors.title}</p>}
+            {formErrors.title && (
+              <p className="form-field-error-message">{formErrors.title}</p>
+            )}
           </div>
 
           <div className="form-field">
@@ -113,7 +124,9 @@ const CreateDiplomaPage = () => {
               type="text"
               name="type"
               value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, type: e.target.value })
+              }
               disabled={isLocked}
               className="large-input"
             />
@@ -125,7 +138,9 @@ const CreateDiplomaPage = () => {
               type="text"
               name="departmentName"
               value={formData.departmentName}
-              onChange={(e) => setFormData({ ...formData, departmentName: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, departmentName: e.target.value })
+              }
               disabled={isLocked}
               className="large-input"
             />
@@ -137,65 +152,79 @@ const CreateDiplomaPage = () => {
               type="text"
               name="course"
               value={formData.course}
-              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, course: e.target.value })
+              }
               disabled={isLocked}
               className="large-input"
             />
           </div>
 
           <div className="form-field">
-            <label>Create Date:</label>
+            <label>Create Date*:</label>
             <input
               type="datetime-local"
               name="createDate"
               value={formData.createDate}
-              onChange={(e) => setFormData({ ...formData, createDate: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, createDate: e.target.value })
+              }
               disabled={isLocked}
               className="large-input"
             />
-            {formErrors.createDate && <p className="form-field-error-message">{formErrors.createDate}</p>}
+            {formErrors.createDate && (
+              <p className="form-field-error-message">
+                {formErrors.createDate}
+              </p>
+            )}
           </div>
 
           <div className="form-field">
-            <label>Student ID*:</label>
-            <input
-              type="text"
-              name="studentId"
-              value={formData.studentId}
-              onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-              disabled={isLocked}
-              className="large-input"
+            <UserSearch
+              role="Student"
+              label="Student Name*:"
+              onSelect={(user) =>
+                setFormData({ ...formData, studentId: user.id })
+              }
             />
-            {formErrors.studentId && <p className="form-field-error-message">{formErrors.studentId}</p>}
+            {formErrors.studentId && (
+              <p className="form-field-error-message">{formErrors.studentId}</p>
+            )}
           </div>
 
           <div className="form-field">
-            <label>Promoter ID*:</label>
-            <input
-              type="text"
-              name="promoterId"
-              value={formData.promoterId}
-              onChange={(e) => setFormData({ ...formData, promoterId: e.target.value })}
-              disabled={isLocked}
-              className="large-input"
+            <UserSearch
+              role="Professor"
+              label="Promoter*:"
+              onSelect={(user) =>
+                setFormData({ ...formData, promoterId: user.id })
+              }
             />
-            {formErrors.promoterId && <p className="form-field-error-message">{formErrors.promoterId}</p>}
+            {formErrors.promoterId && (
+              <p className="form-field-error-message">
+                {formErrors.promoterId}
+              </p>
+            )}
           </div>
 
           <div className="form-field">
-            <label>Reviewer ID*:</label>
-            <input
-              type="text"
-              name="reviewerId"
-              value={formData.reviewerId}
-              onChange={(e) => setFormData({ ...formData, reviewerId: e.target.value })}
-              disabled={isLocked}
-              className="large-input"
+            <UserSearch
+              role="Professor"
+              label="Reviewer*:"
+              onSelect={(user) =>
+                setFormData({ ...formData, reviewerId: user.id })
+              }
             />
-            {formErrors.reviewerId && <p className="form-field-error-message">{formErrors.reviewerId}</p>}
+            {formErrors.reviewerId && (
+              <p className="form-field-error-message">
+                {formErrors.reviewerId}
+              </p>
+            )}
           </div>
 
-          {formErrors.general && <p className="form-field-error-message">{formErrors.general}</p>}
+          {formErrors.general && (
+            <p className="form-field-error-message">{formErrors.general}</p>
+          )}
 
           <button
             type="button"
