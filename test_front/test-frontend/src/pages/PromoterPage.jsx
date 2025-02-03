@@ -43,7 +43,7 @@ const PromoterPage = ({ username, onLogout }) => {
   return (
     <div className="promoter-page">
       <Header username={username} onLogout={onLogout} />
-      <h1>Archiwum prac dyplomowych</h1>
+      <h1>Archive of Diploma Theses</h1>
 
       <div className="content-container">
         {/* Left Side */}
@@ -52,7 +52,7 @@ const PromoterPage = ({ username, onLogout }) => {
             Add Diploma
           </button>
 
-          <h2>Szukaj dyplomu</h2>
+          <h2>Search Diploma</h2>
           <div className="search-fields">
             <div className="search-field">
               <UserSearch
@@ -94,16 +94,16 @@ const PromoterPage = ({ username, onLogout }) => {
               />
             </div>
             <button className="search-button" onClick={handleSearch}>
-              Szukaj
+              Search
             </button>
           </div>
 
           <div className="diplomas-table">
-            <h3>Lista dyplomów</h3>
+            <h3>List of Diploma</h3>
             <table className="diploma-table">
               <thead>
                 <tr>
-                  <th>Dyplomy</th>
+                  <th>Diploma</th>
                 </tr>
               </thead>
               <tbody>

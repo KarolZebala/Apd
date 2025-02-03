@@ -1,16 +1,90 @@
 .student-page {
-    padding: 20px;
-  }
-  
-  .tables {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .left-table {
-    flex: 1;
-  }
-  
-  .right-table {
-    flex: 2;
-  }
+  padding: 20px;
+}
+
+.content-container {
+  display: flex;
+  gap: 20px;
+}
+
+/* Lewa i prawa strona */
+.left-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Przyciski */
+.add-diploma-button,
+.search-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.add-diploma-button:hover,
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.search-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Tabele */
+.diploma-table,
+.selected-diploma-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.diploma-table th,
+.diploma-table td,
+.selected-diploma-table th,
+.selected-diploma-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.diploma-table th,
+.selected-diploma-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.diploma-table-row:hover,
+.selected-diploma-table tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}

@@ -19,21 +19,12 @@ const LoginPage = () => {
     setIsLocked(true);
     try {
       const token = await login(username, password);
-      console.log("Received token:", token);
 
       localStorage.setItem("jwtToken", token);
       const decoded = jwtDecode(token);
 
       const role =
         decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
-      // Dodatkowa weryfikacja z API
-      const isValidUser = await verifyUserRole(username, role);
-      if (!isValidUser) {
-        throw new Error(
-          "Weryfikacja nie powiodła się. Skontaktuj się z administratorem."
-        );
-      }
 
       setIsSuccess(true);
       setError(null);

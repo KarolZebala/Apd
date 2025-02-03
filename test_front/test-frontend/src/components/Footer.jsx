@@ -1,11 +1,11 @@
 // src/components/Footer.jsx
-import React from 'react';
-import '../styles/footer.css';
+import React from "react";
+import "../styles/footer.css";
 
 const Footer = () => {
   return (
     <footer className="footer">
-      Archiwum Prac Dyplomowych, zespół 5 APSI, EITI PW, Warszawa 2025
+      Archive of Diploma Theses, team 5 APSI, EITI PW, Warsaw 2025
     </footer>
   );
 };
