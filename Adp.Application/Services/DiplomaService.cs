@@ -166,6 +166,17 @@ public class DiplomaService : IDiplomaService
             }
         }
 
+        if (requestModel.Tags != null)
+        {
+            foreach (var tag in requestModel.Tags)
+            {
+                diploma.AddTag(
+                    diploma.DiplomaId,
+                    tag.Name
+                );
+            }
+        }
+        
         await _diplomaRepository.SaveChangesAsync();
     }
 
