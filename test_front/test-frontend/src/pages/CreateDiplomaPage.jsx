@@ -67,8 +67,6 @@ const CreateDiplomaPage = () => {
         reviewerId: String(formData.reviewerId),
       };
 
-      console.log("Wysyłane dane do API:", requestData); // Debug: sprawdzenie wysyłanych danych
-
       await createDiploma(requestData);
 
       setIsSuccess(true);

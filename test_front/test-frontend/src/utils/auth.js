@@ -8,7 +8,6 @@ export const login = async (username, password) => {
       username,
       password,
     });
-    console.log("Backend response:", response.data); // Logowanie odpowiedzi serwera
     return response.data; // Oczekiwane, że backend zwraca token JWT
   } catch (error) {
     console.error("Login error:", error.response?.data || error.message);

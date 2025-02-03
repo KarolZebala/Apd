@@ -93,3 +93,27 @@ export const searchUsers = async (searchString, role) => {
     return [];
   }
 };
+
+export const verifyUserRole = async (username, role) => {
+  try {
+    const response = await fetch(
+      `/User/Search?searchString=${encodeURIComponent(
+        username
+      )}&role=${encodeURIComponent(role)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Błąd podczas weryfikacji użytkownika");
+    }
+    const data = await response.json();
+    return data.length > 0; // Jeśli API zwróciło wyniki, użytkownik istnieje z daną rolą
+  } catch (error) {
+    console.error("Błąd w verifyUserRole:", error);
+    return false;
+  }
+};

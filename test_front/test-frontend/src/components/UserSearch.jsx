@@ -11,7 +11,6 @@ const UserSearch = ({ role, label, onSelect }) => {
       const fetchUsers = async () => {
         try {
           const users = await searchUsers(query, role);
-          console.log("Zwróceni użytkownicy:", users); // Debugowanie
           setResults(users || []);
           setShowDropdown(true);
         } catch (error) {
@@ -28,24 +27,29 @@ const UserSearch = ({ role, label, onSelect }) => {
   }, [query, role]);
 
   const handleSelect = (user) => {
-    setQuery(user.userName || ""); // Ustawiamy `userName` jako wybraną wartość
+    setQuery(user.userName || "");
     setShowDropdown(false);
     onSelect(user);
   };
 
   return (
-    <div className="user-search">
-      <label>{label}</label>
+    <div className="relative w-full max-w-md">
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        className="w-full p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         autoComplete="off"
       />
       {showDropdown && results.length > 0 && (
-        <ul className="dropdown">
+        <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10">
           {results.map((user) => (
-            <li key={user.id} onClick={() => handleSelect(user)}>
+            <li
+              key={user.id}
+              onClick={() => handleSelect(user)}
+              className="p-2 cursor-pointer hover:bg-blue-100"
+            >
               {user.userName || "Unknown"}
             </li>
           ))}

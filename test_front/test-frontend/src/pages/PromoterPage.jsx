@@ -1,9 +1,9 @@
-// PromoterPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchDiploma } from "../api/userApi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import UserSearch from "../components/UserSearch"; // Import UserSearch
 import "../styles/promoter.css";
 
 const PromoterPage = ({ username, onLogout }) => {
@@ -46,7 +46,7 @@ const PromoterPage = ({ username, onLogout }) => {
       <h1>Archiwum prac dyplomowych</h1>
 
       <div className="content-container">
-        {/* Strona lewa */}
+        {/* Left Side */}
         <div className="left-pane">
           <button className="add-diploma-button" onClick={handleAddDiploma}>
             Add Diploma
@@ -55,38 +55,29 @@ const PromoterPage = ({ username, onLogout }) => {
           <h2>Szukaj dyplomu</h2>
           <div className="search-fields">
             <div className="search-field">
-              <label>Student - autor:</label>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Wprowadź nazwisko..."
-                value={searchParams.student}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, student: e.target.value })
+              <UserSearch
+                role="Student"
+                label="Student - autor:"
+                onSelect={(user) =>
+                  setSearchParams({ ...searchParams, student: user.id })
                 }
               />
             </div>
             <div className="search-field">
-              <label>Promotor:</label>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Wprowadź nazwisko..."
-                value={searchParams.promoter}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, promoter: e.target.value })
+              <UserSearch
+                role="Professor"
+                label="Promotor:"
+                onSelect={(user) =>
+                  setSearchParams({ ...searchParams, promoter: user.id })
                 }
               />
             </div>
             <div className="search-field">
-              <label>Recenzent:</label>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Wprowadź nazwisko..."
-                value={searchParams.reviewer}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, reviewer: e.target.value })
+              <UserSearch
+                role="Professor"
+                label="Recenzent:"
+                onSelect={(user) =>
+                  setSearchParams({ ...searchParams, reviewer: user.id })
                 }
               />
             </div>
@@ -130,7 +121,7 @@ const PromoterPage = ({ username, onLogout }) => {
           </div>
         </div>
 
-        {/* Strona prawa */}
+        {/* Right Side */}
         <div className="right-pane">
           <h2>Wybrany dyplom</h2>
           <table className="selected-diploma-table">
@@ -172,18 +163,6 @@ const PromoterPage = ({ username, onLogout }) => {
               <tr>
                 <td>Status</td>
                 <td>{selectedDiploma?.status || "-"}</td>
-              </tr>
-              <tr>
-                <td>Student ID</td>
-                <td>{selectedDiploma?.studentId || "-"}</td>
-              </tr>
-              <tr>
-                <td>Promoter ID</td>
-                <td>{selectedDiploma?.promoterId || "-"}</td>
-              </tr>
-              <tr>
-                <td>Reviewer ID</td>
-                <td>{selectedDiploma?.reviewerId || "-"}</td>
               </tr>
             </tbody>
           </table>
