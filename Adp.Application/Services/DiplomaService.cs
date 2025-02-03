@@ -185,7 +185,6 @@ public class DiplomaService : IDiplomaService
         }
         
         await _diplomaRepository.SaveChangesAsync();
-
         
         var emailMessage =
             $"Praca dyplomowa {diploma.DiplomaId}. Zaloguj się do systemu APD w celu jej oceny";

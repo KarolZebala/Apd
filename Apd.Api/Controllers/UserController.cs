@@ -93,6 +93,30 @@ public class UserController : ControllerBase
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
+    public async Task<IActionResult> GetUserById(string id)
+    {
+        try
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(new
+            {
+                user.UserName,
+                user.Email,
+                user.Id
+            });
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
+    }
+    
     [HttpGet("Search")]
     public async Task<IActionResult> Search(string searchString, string role)
     {
