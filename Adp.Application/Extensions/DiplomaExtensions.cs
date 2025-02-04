@@ -75,4 +75,14 @@ public static class DiplomaExtensions
             Name = diplomaTag.Name,
         };
     }
+
+    public static DiplomaAttachmentFileDto ToFileDtoDto(this DiplomaAttachment diplomaAttachment)
+    {
+        return new DiplomaAttachmentFileDto()
+        {
+            Data = diplomaAttachment.Data.Data,
+            Title = diplomaAttachment.Title,
+            ContentType = diplomaAttachment.ContentType,
+        };
+    }
 }

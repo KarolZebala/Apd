@@ -21,6 +21,7 @@ public class DiplomaRepository(ApdDbContext _context) : IDiplomaRepository
         return await _context.Diplomas
             .Include(x => x.Attachments)
             .Include(x => x.Reviews)
+            .Include(x => x.Tags)
             .FirstOrDefaultAsync(x => x.DiplomaId == id);
     }
 
@@ -82,5 +83,14 @@ public class DiplomaRepository(ApdDbContext _context) : IDiplomaRepository
         }
         
         return await query.ToArrayAsync();
+    }
+
+    public async Task<Diploma?> GetByIdWithAttachmentsAsync(long diplomaId)
+    {
+        return await _context.Diplomas
+            .Include(x => x.Attachments)
+            .ThenInclude(x => x.Data)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.DiplomaId == diplomaId);
     }
 }

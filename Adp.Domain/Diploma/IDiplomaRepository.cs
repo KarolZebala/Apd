@@ -17,4 +17,6 @@ public interface IDiplomaRepository
         int pageSize,
         string? tag
     );
+    
+    Task<Diploma?> GetByIdWithAttachmentsAsync(long diplomaId);
 }
