@@ -19,3 +19,46 @@
 .suggestions-list li:hover {
   background: #f0f0f0;
 }
+
+/* Efekt przyciemnienia tła po udanym utworzeniu dyplomu */
+.create-diploma-page.dimmed {
+  position: relative;
+  pointer-events: none;
+}
+
+.create-diploma-page.dimmed::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Blokowanie interakcji po rozpoczęciu tworzenia dyplomu */
+.interaction-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 15;
+}
+
+/* Styl komunikatu o sukcesie */
+.success-message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 20;
+}

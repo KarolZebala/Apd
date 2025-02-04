@@ -9,8 +9,9 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import StudentPage from "../pages/StudentPage";
 import PromoterPage from "../pages/PromoterPage";
+import CreateDiplomaPage from "../pages/CreateDiplomaPage";
+import SearchPage from "../pages/DiplomaSearch"; // <-- Import nowej strony
 import ProtectedRoute from "../components/ProtectedRoute";
-import CreateDiplomaPage from '../pages/CreateDiplomaPage';
 
 const AppRouter = () => {
   return (
@@ -42,6 +43,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <CreateDiplomaPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <SearchPage />
             </ProtectedRoute>
           }
         />

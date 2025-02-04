@@ -1,0 +1,47 @@
+.search-page {
+  padding: 20px;
+}
+
+.search-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-fields input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.diploma-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.diploma-table th,
+.diploma-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.diploma-table tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.back-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}

@@ -23,7 +23,10 @@
 }
 
 /* Przyciski */
-.add-diploma-button, .search-button {
+.add-diploma-button,
+.search-button,
+.supervision-button,
+.review-button {
   width: 100%;
   padding: 15px;
   font-size: 18px;
@@ -36,7 +39,10 @@
   text-align: center;
 }
 
-.add-diploma-button:hover, .search-button:hover {
+.add-diploma-button:hover,
+.search-button:hover,
+.review-button:hover,
+.supervision-button:hover {
   background-color: #0056b3;
 }
 
@@ -59,25 +65,30 @@
 }
 
 /* Tabele */
-.diploma-table, .selected-diploma-table {
+.diploma-table,
+.selected-diploma-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-.diploma-table th, .diploma-table td,
-.selected-diploma-table th, .selected-diploma-table td {
+.diploma-table th,
+.diploma-table td,
+.selected-diploma-table th,
+.selected-diploma-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
 }
 
-.diploma-table th, .selected-diploma-table th {
+.diploma-table th,
+.selected-diploma-table th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
 
-.diploma-table-row:hover, .selected-diploma-table tr:hover {
+.diploma-table-row:hover,
+.selected-diploma-table tr:hover {
   background-color: #f9f9f9;
   cursor: pointer;
 }
