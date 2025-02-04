@@ -59,7 +59,7 @@ public class UserController : ControllerBase
         await _userManager.AddToRoleAsync(user, request.Role);
 
         // Zwróć sukces
-        return Ok(new { message = "Rejestracja zakończona sukcesem" });
+        return Ok(new { message = $"Rejestracja zakończona sukcesem" });
     }
 
 
@@ -93,6 +93,7 @@ public class UserController : ControllerBase
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
+    [HttpGet("GetUserById")]
     public async Task<IActionResult> GetUserById(string id)
     {
         try

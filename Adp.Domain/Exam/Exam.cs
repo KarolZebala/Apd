@@ -20,13 +20,13 @@ public sealed class Exam
     private Exam(long diplomaId, DateTime examDate, int? score)
     {
         DiplomaId = diplomaId;
-        ExamDate = examDate;
+        ExamDate = new DateTime(examDate.Year, examDate.Month, examDate.Day, examDate.Hour, examDate.Minute, examDate.Second, DateTimeKind.Utc);
         Score = score;
     }
 
-    public void Update(DateTime requestModelExamDate, int? requestModelScore)
+    public void Update(DateTime examDate, int? score)
     {
-        ExamDate = requestModelExamDate;
-        Score = requestModelScore;
+        ExamDate = new DateTime(examDate.Year, examDate.Month, examDate.Day, examDate.Hour, examDate.Minute, examDate.Second, DateTimeKind.Utc);;
+        Score = score;
     }
 }

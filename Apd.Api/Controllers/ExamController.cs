@@ -1,11 +1,13 @@
 using Adp.Application.RequestModel;
 using Adp.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Apd.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class ExamController : ControllerBase
 {
     private readonly IExamService _examService;
@@ -17,6 +19,7 @@ public class ExamController : ControllerBase
 
     [HttpPost]
     [Route("AddExam")]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> AddExam(CreateExamRequestModel requestModel)
     {
         try
@@ -32,6 +35,7 @@ public class ExamController : ControllerBase
 
     [HttpPost]
     [Route("UpdateExam")]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> UpdateExam(UpdateExamRequestModel requestModel)
     {
         try

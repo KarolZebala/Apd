@@ -9,7 +9,7 @@ namespace Apd.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-//[Authorize(AuthenticationSchemes = "Bearer")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class DiplomaController : ControllerBase
 {
     private readonly IDiplomaService _diplomaService;
@@ -40,7 +40,7 @@ public class DiplomaController : ControllerBase
     }
     
     [HttpPost("AddDiploma")]
-    //[Authorize(Roles = "Professor")]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> AddDiploma([FromBody] CreateDiplomaRequestModel requestModel)
     {
         try
@@ -56,7 +56,7 @@ public class DiplomaController : ControllerBase
     }
 
     [HttpPost("UpdateDiploma")]
-    //[Authorize(Roles = "Student")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> UpdateDiploma([FromBody] UpdateDiplomaDetailsRequestModel requestModel)
     {
         try
@@ -70,7 +70,7 @@ public class DiplomaController : ControllerBase
             return Problem(e.Message);
         }
     }
-
+    
     [HttpPost("SearchDiploma")]
     public async Task<IActionResult> SearchDiploma([FromBody] DiplomaSearchRequestModel requestModel)
     {

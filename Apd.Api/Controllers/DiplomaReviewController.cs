@@ -1,11 +1,13 @@
 using Adp.Application.RequestModel;
 using Adp.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Apd.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(AuthenticationSchemes = "Bearer")]
 public class DiplomaReviewController : ControllerBase
 {
     private readonly IDiplomaReviewService _diplomaReviewService;
@@ -17,6 +19,7 @@ public class DiplomaReviewController : ControllerBase
 
 
     [HttpPost("AddReview")]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> AddReview([FromBody] CreateDiplomaReviewRequestModel requestModel)
     {
         try
