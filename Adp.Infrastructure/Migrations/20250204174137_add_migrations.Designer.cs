@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Adp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApdDbContext))]
-    [Migration("20250122172517_AddReviews")]
-    partial class AddReviews
+    [Migration("20250204174137_add_migrations")]
+    partial class add_migrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,6 +100,76 @@ namespace Adp.Infrastructure.Migrations
                     b.HasIndex("DiplomaId");
 
                     b.ToTable("DiplomaAttachment", (string)null);
+                });
+
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
+                {
+                    b.Property<long>("DiplomaReviewId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaReviewId"));
+
+                    b.Property<long>("DiplomaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReviewContent")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReviewerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DiplomaReviewId");
+
+                    b.HasIndex("DiplomaId");
+
+                    b.ToTable("DiplomaReview", (string)null);
+                });
+
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
+                {
+                    b.Property<long>("DiplomaTagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaTagId"));
+
+                    b.Property<long>("DiplomaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DiplomaTagId");
+
+                    b.HasIndex("DiplomaId");
+
+                    b.ToTable("DiplomaTag", (string)null);
+                });
+
+            modelBuilder.Entity("Adp.Domain.Exam.Exam", b =>
+                {
+                    b.Property<long>("ExamId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ExamId"));
+
+                    b.Property<long>("DiplomaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ExamDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Score")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ExamId");
+
+                    b.ToTable("Exam", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -298,38 +368,6 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Adp.Domain.Diploma.Diploma", b =>
-                {
-                    b.OwnsMany("Adp.Domain.Diploma.DiplomaReview", "Reviews", b1 =>
-                        {
-                            b1.Property<long>("DiplomaId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("DiplomaReviewId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("bigint");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<long>("DiplomaReviewId"));
-
-                            b1.Property<string>("ReviewContent")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<string>("ReviewerId")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("DiplomaId", "DiplomaReviewId");
-
-                            b1.ToTable("DiplomaReview");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DiplomaId");
-                        });
-
-                    b.Navigation("Reviews");
-                });
-
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaAttachment", b =>
                 {
                     b.HasOne("Adp.Domain.Diploma.Diploma", null)
@@ -356,6 +394,24 @@ namespace Adp.Infrastructure.Migrations
                         });
 
                     b.Navigation("Data")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
+                {
+                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("DiplomaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
+                {
+                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("DiplomaId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -413,6 +469,10 @@ namespace Adp.Infrastructure.Migrations
             modelBuilder.Entity("Adp.Domain.Diploma.Diploma", b =>
                 {
                     b.Navigation("Attachments");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

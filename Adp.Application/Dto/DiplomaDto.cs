@@ -13,4 +13,7 @@ public class DiplomaDto
     public required string StudentId { get; set; }
     public required string PromoterId { get; set; }
     public required string ReviewerId { get; set; }
+    
+    public DiplomaAttachmentDto[] Attachments { get; set; }
+    public DiplomaTagDto[] Tags { get; set; }
 }

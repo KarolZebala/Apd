@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Adp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Addusers : Migration
+    public partial class add_migrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,11 +57,35 @@ namespace Adp.Infrastructure.Migrations
                 {
                     DiplomaId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false)
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    DepartmentName = table.Column<string>(type: "text", nullable: true),
+                    Course = table.Column<string>(type: "text", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    StudentId = table.Column<string>(type: "text", nullable: false),
+                    PromoterId = table.Column<string>(type: "text", nullable: false),
+                    ReviewerId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Diploma", x => x.DiplomaId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Exam",
+                columns: table => new
+                {
+                    ExamId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiplomaId = table.Column<long>(type: "bigint", nullable: false),
+                    ExamDate = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    Score = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Exam", x => x.ExamId);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,6 +194,70 @@ namespace Adp.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DiplomaAttachment",
+                columns: table => new
+                {
+                    DiplomaAttachmentId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiplomaId = table.Column<long>(type: "bigint", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Size = table.Column<long>(type: "bigint", nullable: false),
+                    Extension = table.Column<string>(type: "text", nullable: false),
+                    Data_Data = table.Column<byte[]>(type: "bytea", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiplomaAttachment", x => x.DiplomaAttachmentId);
+                    table.ForeignKey(
+                        name: "FK_DiplomaAttachment_Diploma_DiplomaId",
+                        column: x => x.DiplomaId,
+                        principalTable: "Diploma",
+                        principalColumn: "DiplomaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiplomaReview",
+                columns: table => new
+                {
+                    DiplomaReviewId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiplomaId = table.Column<long>(type: "bigint", nullable: false),
+                    ReviewerId = table.Column<string>(type: "text", nullable: false),
+                    ReviewContent = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiplomaReview", x => x.DiplomaReviewId);
+                    table.ForeignKey(
+                        name: "FK_DiplomaReview_Diploma_DiplomaId",
+                        column: x => x.DiplomaId,
+                        principalTable: "Diploma",
+                        principalColumn: "DiplomaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiplomaTag",
+                columns: table => new
+                {
+                    DiplomaTagId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiplomaId = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiplomaTag", x => x.DiplomaTagId);
+                    table.ForeignKey(
+                        name: "FK_DiplomaTag_Diploma_DiplomaId",
+                        column: x => x.DiplomaId,
+                        principalTable: "Diploma",
+                        principalColumn: "DiplomaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -206,6 +294,21 @@ namespace Adp.Infrastructure.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiplomaAttachment_DiplomaId",
+                table: "DiplomaAttachment",
+                column: "DiplomaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiplomaReview_DiplomaId",
+                table: "DiplomaReview",
+                column: "DiplomaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiplomaTag_DiplomaId",
+                table: "DiplomaTag",
+                column: "DiplomaId");
         }
 
         /// <inheritdoc />
@@ -227,13 +330,25 @@ namespace Adp.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Diploma");
+                name: "DiplomaAttachment");
+
+            migrationBuilder.DropTable(
+                name: "DiplomaReview");
+
+            migrationBuilder.DropTable(
+                name: "DiplomaTag");
+
+            migrationBuilder.DropTable(
+                name: "Exam");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Diploma");
         }
     }
 }

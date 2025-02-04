@@ -99,16 +99,6 @@ namespace Adp.Infrastructure.Migrations
                     b.ToTable("DiplomaAttachment", (string)null);
                 });
 
-
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
-                {
-                    b.Property<long>("DiplomaTagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaTagId"));
-                });
-
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
                 {
                     b.Property<long>("DiplomaReviewId")
@@ -117,19 +107,8 @@ namespace Adp.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaReviewId"));
 
-
                     b.Property<long>("DiplomaId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("DiplomaTagId");
-
-                    b.HasIndex("DiplomaId");
-
-                    b.ToTable("DiplomaTag");
 
                     b.Property<string>("ReviewContent")
                         .IsRequired()
@@ -144,6 +123,28 @@ namespace Adp.Infrastructure.Migrations
                     b.HasIndex("DiplomaId");
 
                     b.ToTable("DiplomaReview", (string)null);
+                });
+
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
+                {
+                    b.Property<long>("DiplomaTagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DiplomaTagId"));
+
+                    b.Property<long>("DiplomaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DiplomaTagId");
+
+                    b.HasIndex("DiplomaId");
+
+                    b.ToTable("DiplomaTag", (string)null);
                 });
 
             modelBuilder.Entity("Adp.Domain.Exam.Exam", b =>
@@ -166,7 +167,6 @@ namespace Adp.Infrastructure.Migrations
                     b.HasKey("ExamId");
 
                     b.ToTable("Exam", (string)null);
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -394,18 +394,19 @@ namespace Adp.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
-                {
-                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
-                        .WithMany("Tags");
-        
-                });
-
             modelBuilder.Entity("Adp.Domain.Diploma.DiplomaReview", b =>
                 {
                     b.HasOne("Adp.Domain.Diploma.Diploma", null)
                         .WithMany("Reviews")
+                        .HasForeignKey("DiplomaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
+            modelBuilder.Entity("Adp.Domain.Diploma.DiplomaTag", b =>
+                {
+                    b.HasOne("Adp.Domain.Diploma.Diploma", null)
+                        .WithMany("Tags")
                         .HasForeignKey("DiplomaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -466,9 +467,9 @@ namespace Adp.Infrastructure.Migrations
                 {
                     b.Navigation("Attachments");
 
-                    b.Navigation("Tags");
-                    
                     b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

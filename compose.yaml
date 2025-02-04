@@ -33,7 +33,7 @@ services:
       [
         "/bin/bash",
         "-c",
-        "ls /app/publish && dotnet ef database update --project /src/Apd.Api/Apd.Api.csproj --context ApdDbContext",
+        "ls /app/publish && dotnet ef database update --project /src/Adp.Infrastructure/Adp.Infrastructure.csproj --context ApdDbContext",
       ]
 
   apd.api:
