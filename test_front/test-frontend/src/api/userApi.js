@@ -108,3 +108,41 @@ export const getUserIdByUsernameAndRole = async (username, role) => {
     return null;
   }
 };
+
+// Funkcja pobierania danych użytkownika po ID
+export const getUserById = async (userId) => {
+  try {
+    const response = await axios.get(`${apiUrl}/User/SearchById`, {
+      params: { id: userId },
+    });
+
+    return response.data; // Zwraca { userName, email, id }
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkownika:", error);
+    return null; // Obsługa błędu - zwracamy null, jeśli użytkownik nie zostanie znaleziony
+  }
+};
+
+// Funkcja aktualizacji dyplomu
+export const updateDiploma = async (diplomaData) => {
+  try {
+    const response = await axios.post(
+      `${apiUrl}/Diploma/UpdateDiploma`,
+      diplomaData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data; // Zwraca odpowiedź z backendu
+  } catch (error) {
+    console.error(
+      "Błąd podczas aktualizacji dyplomu:",
+      error.response?.data || error.message
+    );
+    throw (
+      error.response?.data || { message: "Błąd podczas aktualizacji dyplomu." }
+    );
+  }
+};

@@ -26,6 +26,6 @@ public class EmailSender : IEmailSender
         smtp.EnableSsl = true;
 
         // Send email
-        await smtp.SendMailAsync(mail);
+        // await smtp.SendMailAsync(mail);
     }
 }

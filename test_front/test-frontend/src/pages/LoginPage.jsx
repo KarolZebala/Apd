@@ -35,13 +35,13 @@ const LoginPage = () => {
         } else if (role === "Professor") {
           navigate("/promoter");
         } else {
-          setError("Nieznana rola. Skontaktuj się z administratorem.");
+          setError("Unknown role. Please contact the administrator.");
           setIsLocked(false);
         }
       }, 3000);
     } catch (err) {
-      console.error("Błąd podczas logowania:", err.message);
-      setError(err.message || "Nieprawidłowa nazwa użytkownika lub hasło.");
+      console.error("Error during login:", err.message);
+      setError(err.message || "Invalid username or password.");
       setIsLocked(false);
     }
   };

@@ -1,20 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { searchDiploma } from "../api/userApi";
+import { searchDiploma, getUserById } from "../api/userApi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import UserSearch from "../components/UserSearch"; // Import UserSearch
+import UserSearch from "../components/UserSearch";
 import "../styles/promoter.css";
 
 const PromoterPage = ({ username, onLogout }) => {
   const [selectedDiploma, setSelectedDiploma] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [searchParams, setSearchParams] = useState({
+    title: "",
     student: "",
     promoter: "",
     reviewer: "",
     status: "",
+    tag: "",
   });
+
+  const [studentName, setStudentName] = useState("-");
+  const [promoterName, setPromoterName] = useState("-");
+  const [reviewerName, setReviewerName] = useState("-");
+
   const navigate = useNavigate();
 
   const handleAddDiploma = () => {
@@ -24,11 +31,12 @@ const PromoterPage = ({ username, onLogout }) => {
   const handleSearch = async () => {
     try {
       const request = {
-        searchString: null,
+        searchString: searchParams.title || null,
         studentIds: searchParams.student ? [searchParams.student] : null,
         promoterIds: searchParams.promoter ? [searchParams.promoter] : null,
         reviewerIds: searchParams.reviewer ? [searchParams.reviewer] : null,
         status: searchParams.status || null,
+        tag: searchParams.tag || null,
         pageNumber: 1,
         pageSize: 10,
       };
@@ -40,13 +48,38 @@ const PromoterPage = ({ username, onLogout }) => {
     }
   };
 
+  const fetchUserDetails = async (studentId, promoterId, reviewerId) => {
+    try {
+      if (studentId) {
+        const student = await getUserById(studentId);
+        setStudentName(student?.userName || "-");
+      }
+      if (promoterId) {
+        const promoter = await getUserById(promoterId);
+        setPromoterName(promoter?.userName || "-");
+      }
+      if (reviewerId) {
+        const reviewer = await getUserById(reviewerId);
+        setReviewerName(reviewer?.userName || "-");
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  const handleSelectDiploma = (diploma) => {
+    setSelectedDiploma(diploma);
+    setStudentName("-");
+    setPromoterName("-");
+    setReviewerName("-");
+    fetchUserDetails(diploma.studentId, diploma.promoterId, diploma.reviewerId);
+  };
+
   return (
     <div className="promoter-page">
       <Header username={username} onLogout={onLogout} />
-      <h1>Archive of Diploma Theses</h1>
-
+      <h1>Diploma Thesis Archive</h1>
       <div className="content-container">
-        {/* Left Side */}
         <div className="left-pane">
           <button className="add-diploma-button" onClick={handleAddDiploma}>
             Add Diploma
@@ -55,9 +88,22 @@ const PromoterPage = ({ username, onLogout }) => {
           <h2>Search Diploma</h2>
           <div className="search-fields">
             <div className="search-field">
+              <label>Title:</label>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Enter diploma title..."
+                value={searchParams.title}
+                onChange={(e) =>
+                  setSearchParams({ ...searchParams, title: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="search-field">
               <UserSearch
                 role="Student"
-                label="Student - autor:"
+                label="Student - Author:"
                 onSelect={(user) =>
                   setSearchParams({ ...searchParams, student: user.id })
                 }
@@ -66,7 +112,7 @@ const PromoterPage = ({ username, onLogout }) => {
             <div className="search-field">
               <UserSearch
                 role="Professor"
-                label="Promotor:"
+                label="Promoter:"
                 onSelect={(user) =>
                   setSearchParams({ ...searchParams, promoter: user.id })
                 }
@@ -75,7 +121,7 @@ const PromoterPage = ({ username, onLogout }) => {
             <div className="search-field">
               <UserSearch
                 role="Professor"
-                label="Recenzent:"
+                label="Reviewer:"
                 onSelect={(user) =>
                   setSearchParams({ ...searchParams, reviewer: user.id })
                 }
@@ -86,10 +132,22 @@ const PromoterPage = ({ username, onLogout }) => {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Wprowadź status..."
+                placeholder="Enter status..."
                 value={searchParams.status}
                 onChange={(e) =>
                   setSearchParams({ ...searchParams, status: e.target.value })
+                }
+              />
+            </div>
+            <div className="search-field">
+              <label>Tag:</label>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Enter tag..."
+                value={searchParams.tag}
+                onChange={(e) =>
+                  setSearchParams({ ...searchParams, tag: e.target.value })
                 }
               />
             </div>
@@ -99,7 +157,7 @@ const PromoterPage = ({ username, onLogout }) => {
           </div>
 
           <div className="diplomas-table">
-            <h3>List of Diploma</h3>
+            <h3>List of Diplomas</h3>
             <table className="diploma-table">
               <thead>
                 <tr>
@@ -111,7 +169,7 @@ const PromoterPage = ({ username, onLogout }) => {
                   <tr
                     key={diploma.diplomaId}
                     className="diploma-table-row"
-                    onClick={() => setSelectedDiploma(diploma)}
+                    onClick={() => handleSelectDiploma(diploma)}
                   >
                     <td className="diploma-table-cell">{diploma.title}</td>
                   </tr>
@@ -120,22 +178,17 @@ const PromoterPage = ({ username, onLogout }) => {
             </table>
           </div>
         </div>
-
         {/* Right Side */}
         <div className="right-pane">
-          <h2>Wybrany dyplom</h2>
+          <h2>Selected Diploma</h2>
           <table className="selected-diploma-table">
             <thead>
               <tr>
-                <th>Pole</th>
-                <th>Wartość</th>
+                <th>Field</th>
+                <th>Value</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Diploma ID</td>
-                <td>{selectedDiploma?.diplomaId || "-"}</td>
-              </tr>
               <tr>
                 <td>Title</td>
                 <td>{selectedDiploma?.title || "-"}</td>
@@ -164,11 +217,22 @@ const PromoterPage = ({ username, onLogout }) => {
                 <td>Status</td>
                 <td>{selectedDiploma?.status || "-"}</td>
               </tr>
+              <tr>
+                <td>Student</td>
+                <td>{studentName}</td>
+              </tr>
+              <tr>
+                <td>Promoter</td>
+                <td>{promoterName}</td>
+              </tr>
+              <tr>
+                <td>Reviewer</td>
+                <td>{reviewerName}</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
-
       <Footer />
     </div>
   );

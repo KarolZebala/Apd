@@ -74,11 +74,11 @@ public class DiplomaService : IDiplomaService
         await _diplomaRepository.SaveChangesAsync();
         
         var student = await _userRepository.GetByIdAsync(diploma.StudentId);
-
+        /*
         var emailMessage =
             $"Dodano prace dyplomową {diploma.DiplomaId}. Zaloguj się do systemu APD w celu jej uzupełnienia";
         await _emailSender.SendEmailAsync(student.Email, "Dodano Twoją prace dyplomową do systemu.", emailMessage);
-        
+        */
         // Dispatch workflow
         /*
         var workflowDefinitionId = "TestWorkflow"; // Use the workflow definition ID or name

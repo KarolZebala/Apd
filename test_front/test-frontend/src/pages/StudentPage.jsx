@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { searchDiploma, getUserIdByUsernameAndRole } from "../api/userApi"; // Dodano nowe API
+import {
+  searchDiploma,
+  getUserIdByUsernameAndRole,
+  updateDiploma,
+} from "../api/userApi"; // Dodano updateDiploma
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import UserSearch from "../components/UserSearch"; // Import UserSearch
+import UserSearch from "../components/UserSearch";
 import { jwtDecode } from "jwt-decode";
 import "../styles/student.css";
 
@@ -20,6 +24,10 @@ const StudentPage = ({ onLogout }) => {
     status: "",
   });
 
+  // Nowe stany dla pliku i tagów
+  const [pdfFile, setPdfFile] = useState(null);
+  const [tags, setTags] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
@@ -35,8 +43,6 @@ const StudentPage = ({ onLogout }) => {
           ] || "Student";
 
         setUsername(extractedUsername);
-
-        // Pobierz userId na podstawie username i roli
         fetchUserIdByUsernameAndRole(extractedUsername, role);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -47,8 +53,8 @@ const StudentPage = ({ onLogout }) => {
   const fetchUserIdByUsernameAndRole = async (username, role) => {
     try {
       const user = await getUserIdByUsernameAndRole(username, role);
-      if (user && user.id) {
-        setUserId(user.id);
+      if (user) {
+        setUserId(user);
       }
     } catch (error) {
       console.error("Error fetching user ID:", error);
@@ -56,10 +62,11 @@ const StudentPage = ({ onLogout }) => {
   };
 
   useEffect(() => {
-    // Pobieranie prac dyplomowych dla danego użytkownika
     const fetchUserDiplomas = async () => {
       try {
-        if (!userId) return;
+        if (!userId) {
+          return;
+        }
 
         const request = {
           studentIds: [userId],
@@ -77,7 +84,6 @@ const StudentPage = ({ onLogout }) => {
     fetchUserDiplomas();
   }, [userId]);
 
-  // Wyszukiwanie prac dyplomowych na podstawie filtrów
   const handleSearch = async () => {
     try {
       const request = {
@@ -95,6 +101,43 @@ const StudentPage = ({ onLogout }) => {
     } catch (error) {
       console.error("Error searching diplomas:", error);
     }
+  };
+
+  // Nowa funkcja do aktualizacji pracy dyplomowej
+  const handleUpdateDiploma = async () => {
+    if (!pdfFile || pdfFile.size > 50 * 1024 * 1024) {
+      alert("Please upload a PDF file smaller than 50MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64File = reader.result.split(",")[1]; // Usuń nagłówek base64
+
+      const request = {
+        diplomaId: selectedDiploma.diplomaId,
+        description: selectedDiploma.description,
+        attachments: [
+          {
+            title: pdfFile.name,
+            size: pdfFile.size,
+            extension: ".pdf",
+            data: base64File,
+          },
+        ],
+        tags: tags.split(",").map((tag) => ({ name: tag.trim() })),
+      };
+
+      try {
+        await updateDiploma(request);
+        alert("Diploma updated successfully!");
+      } catch (error) {
+        console.error("Error updating diploma:", error);
+        alert("Failed to update diploma.");
+      }
+    };
+
+    reader.readAsDataURL(pdfFile); // Konwertowanie pliku na Base64
   };
 
   return (
@@ -251,6 +294,25 @@ const StudentPage = ({ onLogout }) => {
               </tr>
             </tbody>
           </table>
+
+          {/* Sekcja dodawania pliku i tagów dla statusu "New" */}
+          {selectedDiploma?.status === "New" && (
+            <div className="upload-section">
+              <h3>Upload PDF and Add Tags</h3>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setPdfFile(e.target.files[0])}
+              />
+              <input
+                type="text"
+                placeholder="Enter tags separated by commas"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
+              <button onClick={handleUpdateDiploma}>Submit</button>
+            </div>
+          )}
         </div>
       </div>
 

@@ -93,6 +93,7 @@ public class UserController : ControllerBase
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
+    [HttpGet("SearchById")]
     public async Task<IActionResult> GetUserById(string id)
     {
         try
