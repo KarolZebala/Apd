@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { updateDiploma } from "../api/userApi";
 
 const UploadModal = ({ diploma, onClose }) => {
@@ -6,6 +6,10 @@ const UploadModal = ({ diploma, onClose }) => {
   const [tags, setTags] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    console.log("Received diploma:", diploma); // Logujemy obiekt diploma
+  }, [diploma]);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -23,6 +27,12 @@ const UploadModal = ({ diploma, onClose }) => {
       return;
     }
 
+    if (!diploma || !diploma.diplomaId) {
+      setError("Invalid diploma information.");
+      console.error("Invalid diploma:", diploma); // Logujemy błąd w konsoli
+      return;
+    }
+
     setLoading(true);
     try {
       const reader = new FileReader();
@@ -31,7 +41,7 @@ const UploadModal = ({ diploma, onClose }) => {
         const base64File = reader.result.split(",")[1];
 
         const payload = {
-          diplomaId: diploma.id,
+          diplomaId: diploma.diplomaId, // Zmienione na diploma.diplomaId
           description: "Uploaded by student",
           attachments: [
             {
@@ -46,19 +56,20 @@ const UploadModal = ({ diploma, onClose }) => {
         };
 
         await updateDiploma(payload);
-        onClose();
+        onClose(); // Zamykamy modal po udanym wysłaniu
       };
     } catch (error) {
       setError("Failed to upload file.");
+      console.error("Upload error:", error); // Logujemy błąd w przypadku niepowodzenia
     } finally {
-      setLoading(false);
+      setLoading(false); // Wyłączamy ładowanie po zakończeniu operacji
     }
   };
 
   return (
     <div className="modal">
       <div className="modal-content">
-        <h3>Upload PDF for {diploma.title}</h3>
+        <h3>Upload PDF for {diploma?.title || "Unknown Diploma"}</h3>
         <input
           type="file"
           accept="application/pdf"
