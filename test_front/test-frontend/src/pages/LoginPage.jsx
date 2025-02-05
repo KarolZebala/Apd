@@ -26,9 +26,10 @@ const LoginPage = () => {
       setError(null);
 
       setTimeout(() => {
-        if (userData.roles.includes("Student")) {
-          navigate("/first");
-        } else if (userData.roles.includes("Professor")) {
+        if (
+          userData.roles.includes("Student") ||
+          userData.roles.includes("Professor")
+        ) {
           navigate("/first");
         } else {
           setError("Unknown role. Please contact the administrator.");

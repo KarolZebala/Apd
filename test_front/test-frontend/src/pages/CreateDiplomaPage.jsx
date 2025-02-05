@@ -71,7 +71,7 @@ const CreateDiplomaPage = () => {
 
       setTimeout(() => {
         setIsLocked(false);
-        navigate("/promoter");
+        navigate("/first");
       }, 3000);
     } catch (err) {
       console.error("Błąd z API:", err.response || err);
