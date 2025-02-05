@@ -6,6 +6,7 @@ public sealed class DiplomaAttachment
         string title,
         long size,
         string extension,
+        string contentType,
         byte[] data
     )
     {
@@ -13,6 +14,7 @@ public sealed class DiplomaAttachment
             title: title,
             size: size,
             extension: extension,
+            contentType: contentType,
             data: data
         );
     }
@@ -22,6 +24,7 @@ public sealed class DiplomaAttachment
     public string Title { get; private set; }
     public long Size { get; private set; }
     public string Extension { get; private set; }
+    public string ContentType { get; private set; }
     
     public DiplomaAttachmentData Data { get; private set; }
     
@@ -34,12 +37,14 @@ public sealed class DiplomaAttachment
         string title,
         long size,
         string extension,
+        string contentType,
         byte[] data
     )
     {
         Title = title;
         Size = size;
         Extension = extension;
+        ContentType = contentType;
         Data = DiplomaAttachmentData.Create(data);
     }
 }

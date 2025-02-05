@@ -99,6 +99,7 @@ public sealed class Diploma
         string attachmentTitle,
         string attachmentExtension,
         long attachmentSize,
+        string contentType,
         byte[] attachmentData
     )
     {
@@ -106,6 +107,7 @@ public sealed class Diploma
             title: attachmentTitle,
             extension: attachmentExtension,
             size: attachmentSize,
+            contentType: contentType,
             data: attachmentData
         );
         _attachments.Add(attachment);

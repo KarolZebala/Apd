@@ -6,4 +6,5 @@ public class DiplomaAttachmentRequestModel
     public long Size { get; set; }
     public string Extension { get; set; }
     public byte[] Data { get; set; }
+    public string ContentType { get; set; }
 }

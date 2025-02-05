@@ -11,3 +11,10 @@ public class DiplomaAttachmentDto
     public string Extension { get; set; }
     public byte[] Data { get; set; }
 }
+
+public class DiplomaAttachmentFileDto
+{
+    public byte[] Data { get; set; }
+    public string Title { get; set; }
+    public string ContentType { get; set; }
+}

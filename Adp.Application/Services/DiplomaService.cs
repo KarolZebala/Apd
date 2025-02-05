@@ -17,7 +17,7 @@ public interface IDiplomaService
     Task<DiplomaDto?> GetDiplomaById(long diplomaId);
     Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel);
     Task<DiplomaDto[]> SearchDiploma(DiplomaSearchRequestModel requestModel);
-    
+    Task<DiplomaAttachmentFileDto?> GetAttachmentFile(long diplomaId, long attachmentId);
 }
 
 public class DiplomaService : IDiplomaService
@@ -161,6 +161,7 @@ public class DiplomaService : IDiplomaService
                     attachment.Title,
                     attachment.Extension,
                     attachment.Size,
+                    attachment.ContentType,
                     attachment.Data
                 );
             }
@@ -219,5 +220,26 @@ public class DiplomaService : IDiplomaService
         diploma.AddReview(requestModel.ReviewerId, requestModel.ReviewContent);
         
         await _diplomaRepository.SaveChangesAsync();
+    }
+
+    public async Task<DiplomaAttachmentFileDto?> GetAttachmentFile(long diplomaId, long attachmentId)
+    {
+        var diploma = await _diplomaRepository.GetByIdWithAttachmentsAsync(diplomaId);
+
+        if (diploma is null)
+        {
+            return null;
+        }
+
+        var attachment = diploma.Attachments.AsEnumerable().FirstOrDefault(x => x.DiplomaAttachmentId == attachmentId);
+
+        if (attachment is null)
+        {
+            return null;
+        }
+        
+        var attachmentDto = attachment.ToFileDtoDto();
+        
+        return attachmentDto;
     }
 }
