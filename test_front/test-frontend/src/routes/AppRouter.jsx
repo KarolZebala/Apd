@@ -7,10 +7,10 @@ import {
 } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
-import StudentPage from "../pages/StudentPage";
-import PromoterPage from "../pages/PromoterPage";
+import CreateDiplomaPage from "../pages/CreateDiplomaPage";
+import SearchPage from "../pages/DiplomaSearch"; // <-- Import nowej strony
 import ProtectedRoute from "../components/ProtectedRoute";
-import CreateDiplomaPage from '../pages/CreateDiplomaPage';
+import First from "../pages/First";
 
 const AppRouter = () => {
   return (
@@ -22,18 +22,10 @@ const AppRouter = () => {
 
         {/* Zabezpieczone strony */}
         <Route
-          path="/student"
+          path="/first"
           element={
             <ProtectedRoute>
-              <StudentPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/promoter"
-          element={
-            <ProtectedRoute>
-              <PromoterPage />
+              <First />
             </ProtectedRoute>
           }
         />
@@ -42,6 +34,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <CreateDiplomaPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <SearchPage />
             </ProtectedRoute>
           }
         />

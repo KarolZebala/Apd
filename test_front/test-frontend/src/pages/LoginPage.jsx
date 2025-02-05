@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
-import { login, verifyUserRole } from "../api/userApi";
-import { jwtDecode } from "jwt-decode";
+import { login, me } from "../api/userApi";
 import "../styles/login.css";
 
 const LoginPage = () => {
@@ -21,27 +20,25 @@ const LoginPage = () => {
       const token = await login(username, password);
 
       localStorage.setItem("jwtToken", token);
-      const decoded = jwtDecode(token);
-
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const userData = await me();
 
       setIsSuccess(true);
       setError(null);
 
       setTimeout(() => {
-        if (role === "Student") {
-          navigate("/student");
-        } else if (role === "Professor") {
-          navigate("/promoter");
+        if (
+          userData.roles.includes("Student") ||
+          userData.roles.includes("Professor")
+        ) {
+          navigate("/first");
         } else {
-          setError("Nieznana rola. Skontaktuj się z administratorem.");
+          setError("Unknown role. Please contact the administrator.");
           setIsLocked(false);
         }
       }, 3000);
     } catch (err) {
-      console.error("Błąd podczas logowania:", err.message);
-      setError(err.message || "Nieprawidłowa nazwa użytkownika lub hasło.");
+      console.error("Error during login:", err.message);
+      setError(err.message || "Invalid username or password.");
       setIsLocked(false);
     }
   };
@@ -71,17 +68,22 @@ const LoginPage = () => {
           disabled={isLocked}
         />
         <button
-          className="form-button"
-          onClick={handleLogin}
-          disabled={!isFormValid || isLocked}
-        >
-          Login
-        </button>
+            className="form-button"
+            onClick={handleLogin}
+            disabled={!isFormValid || isLocked}
+          >
+            Login
+          </button>
         {error && <p className="form-field-error-message">{error}</p>}
 
-        <Link to="/register" className="form-link-button" disabled={isLocked}>
-          Go to Register
-        </Link>
+        <button
+            className="form-button"
+            onClick={() => navigate("/register")}
+            disabled={isLocked}
+          >
+            Go to Register
+        </button>
+
       </div>
     </div>
   );

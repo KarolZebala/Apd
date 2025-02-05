@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../utils/auth";
-import { jwtDecode } from "jwt-decode";
+import { me } from "../api/userApi";
 import "../styles/header.css";
 
 const Header = () => {
@@ -9,22 +9,18 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
+    const fetchUserData = async () => {
       try {
-        const decoded = jwtDecode(token);
-        setUsername(
-          decoded[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-          ] || "Unknown User"
-        );
+        const userData = await me(); // Pobieramy dane użytkownika z backendu
+        setUsername(userData.userName); // Ustawiamy nazwę użytkownika
       } catch (error) {
-        console.error("Error decoding token:", error);
+        console.error("Błąd podczas pobierania danych użytkownika:", error);
       }
-    }
+    };
+
+    fetchUserData();
   }, []);
 
-  // Handle user logout
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -32,7 +28,9 @@ const Header = () => {
 
   return (
     <header className="header">
-      <span className="header-username">Logged in as: {username}</span>
+      <span className="header-username">
+        Logged in as: {username || "Guest"}
+      </span>
       <button className="header-logout" onClick={handleLogout}>
         Logout
       </button>

@@ -1,0 +1,18 @@
+.diploma-details {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.diploma-details table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.diploma-details th,
+.diploma-details td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}

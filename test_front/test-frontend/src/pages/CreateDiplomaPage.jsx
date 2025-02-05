@@ -50,12 +50,11 @@ const CreateDiplomaPage = () => {
     }
     setFormErrors({});
     setIsLoading(true);
+    setIsLocked(true);
 
     try {
-      // Konwersja daty na wymagany format ISO 8601
       const formattedDate = new Date(formData.createDate).toISOString();
 
-      // Upewniamy się, że ID są typu string
       const requestData = {
         title: formData.title,
         type: formData.type,
@@ -68,15 +67,14 @@ const CreateDiplomaPage = () => {
       };
 
       await createDiploma(requestData);
-
       setIsSuccess(true);
-      setIsLocked(true);
+
       setTimeout(() => {
         setIsLocked(false);
-        navigate("/promoter");
+        navigate("/first");
       }, 3000);
     } catch (err) {
-      console.error("Błąd z API:", err.response || err); // Debug: pełna odpowiedź z błędem
+      console.error("Błąd z API:", err.response || err);
       setFormErrors({
         general: err.response?.data?.message || "Failed to create diploma.",
       });
@@ -145,20 +143,6 @@ const CreateDiplomaPage = () => {
           </div>
 
           <div className="form-field">
-            <label>Course:</label>
-            <input
-              type="text"
-              name="course"
-              value={formData.course}
-              onChange={(e) =>
-                setFormData({ ...formData, course: e.target.value })
-              }
-              disabled={isLocked}
-              className="large-input"
-            />
-          </div>
-
-          <div className="form-field">
             <label>Create Date*:</label>
             <input
               type="datetime-local"
@@ -177,48 +161,38 @@ const CreateDiplomaPage = () => {
             )}
           </div>
 
-          <div className="form-field">
-            <UserSearch
-              role="Student"
-              label="Student Name*:"
-              onSelect={(user) =>
-                setFormData({ ...formData, studentId: user.id })
-              }
-            />
-            {formErrors.studentId && (
-              <p className="form-field-error-message">{formErrors.studentId}</p>
-            )}
-          </div>
+          <UserSearch
+            role="Student"
+            label="Student Name*:"
+            onSelect={(user) =>
+              setFormData({ ...formData, studentId: user.id })
+            }
+          />
+          {formErrors.studentId && (
+            <p className="form-field-error-message">{formErrors.studentId}</p>
+          )}
 
-          <div className="form-field">
-            <UserSearch
-              role="Professor"
-              label="Promoter*:"
-              onSelect={(user) =>
-                setFormData({ ...formData, promoterId: user.id })
-              }
-            />
-            {formErrors.promoterId && (
-              <p className="form-field-error-message">
-                {formErrors.promoterId}
-              </p>
-            )}
-          </div>
+          <UserSearch
+            role="Professor"
+            label="Promoter*:"
+            onSelect={(user) =>
+              setFormData({ ...formData, promoterId: user.id })
+            }
+          />
+          {formErrors.promoterId && (
+            <p className="form-field-error-message">{formErrors.promoterId}</p>
+          )}
 
-          <div className="form-field">
-            <UserSearch
-              role="Professor"
-              label="Reviewer*:"
-              onSelect={(user) =>
-                setFormData({ ...formData, reviewerId: user.id })
-              }
-            />
-            {formErrors.reviewerId && (
-              <p className="form-field-error-message">
-                {formErrors.reviewerId}
-              </p>
-            )}
-          </div>
+          <UserSearch
+            role="Professor"
+            label="Reviewer*:"
+            onSelect={(user) =>
+              setFormData({ ...formData, reviewerId: user.id })
+            }
+          />
+          {formErrors.reviewerId && (
+            <p className="form-field-error-message">{formErrors.reviewerId}</p>
+          )}
 
           {formErrors.general && (
             <p className="form-field-error-message">{formErrors.general}</p>
@@ -233,14 +207,22 @@ const CreateDiplomaPage = () => {
             {isLoading ? "Creating..." : "Create Diploma"}
           </button>
 
-          <button
+          {/* <button
             type="button"
-            onClick={() => navigate("/promoter")}
+            onClick={() => navigate("/first")}
             disabled={isLocked}
             className="cancel-button"
           >
             Cancel
-          </button>
+          </button> */}
+
+
+          {/* Nowy przycisk "Cofnij" */}
+      <button onClick={() => navigate("/first")} className="back-button">
+        Cancel
+      </button>
+
+
         </form>
       </div>
     </div>

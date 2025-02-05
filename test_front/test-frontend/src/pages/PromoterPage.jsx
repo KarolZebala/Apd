@@ -1,171 +1,181 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { searchDiploma } from "../api/userApi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import UserSearch from "../components/UserSearch"; // Import UserSearch
+import DiplomaDetails from "../components/DiplomaDetails";
 import "../styles/promoter.css";
+import { me, searchDiploma } from "../api/userApi";
 
 const PromoterPage = ({ username, onLogout }) => {
   const [selectedDiploma, setSelectedDiploma] = useState(null);
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchParams, setSearchParams] = useState({
-    student: "",
-    promoter: "",
-    reviewer: "",
-    status: "",
-  });
+  const [viewMode, setViewMode] = useState(null);
+  const [diplomas, setDiplomas] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
 
-  const handleAddDiploma = () => {
-    navigate("/create-diploma");
-  };
+  // Pobranie danych użytkownika
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await me();
+        setUserId(userData.id);
+        setUserRole(userData.roles[0]);
 
-  const handleSearch = async () => {
+        if (userData.roles[0] === "Professor") {
+          setViewMode("supervision");
+          fetchDiplomas("supervision", userData.id, userData.roles[0]);
+        } else if (userData.roles[0] === "Student") {
+          fetchDiplomas("student", userData.id, userData.roles[0]);
+        }
+      } catch (error) {}
+    };
+    fetchUserData();
+  }, []);
+
+  // Pobieranie listy dyplomów
+  const fetchDiplomas = async (roleId, id, role) => {
+    if (!id || !role) return;
+    setLoading(true);
+
     try {
-      const request = {
-        searchString: null,
-        studentIds: searchParams.student ? [searchParams.student] : null,
-        promoterIds: searchParams.promoter ? [searchParams.promoter] : null,
-        reviewerIds: searchParams.reviewer ? [searchParams.reviewer] : null,
-        status: searchParams.status || null,
+      let request = {
         pageNumber: 1,
         pageSize: 10,
       };
 
+      if (role === "Professor") {
+        if (roleId === "supervision") {
+          request.promoterIds = [id];
+        } else if (roleId === "review") {
+          request.reviewerIds = [id];
+        }
+      } else if (role === "Student") {
+        request.studentIds = [id];
+      }
+
       const results = await searchDiploma(request);
-      setSearchResults(results || []);
+
+      setDiplomas(results || []);
     } catch (error) {
-      console.error("Error searching diplomas:", error);
+      console.error("Error fetching diplomas:", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Obsługa zmiany widoku dla profesora
+  const handleViewModeChange = (newViewMode) => {
+    setViewMode(newViewMode);
+    fetchDiplomas(newViewMode, userId, userRole);
+  };
+
+  // Nawigacja do wyszukiwarki prac
+  const handleSearchRedirect = () => {
+    navigate("/search");
+  };
+
+  // Nawigacja do dodania pracy (dla promotora)
+  const handleAddDiploma = () => {
+    navigate("/create-diploma");
   };
 
   return (
     <div className="promoter-page">
       <Header username={username} onLogout={onLogout} />
-      <h1>Archive of Diploma Theses</h1>
+      <h1>Diploma Thesis Archive</h1>
 
       <div className="content-container">
-        {/* Left Side */}
+        {/* Lewa sekcja - przyciski i lista dyplomów */}
         <div className="left-pane">
-          <button className="add-diploma-button" onClick={handleAddDiploma}>
-            Add Diploma
-          </button>
+          {/* Przyciski dla Professor */}
+          {userRole === "Professor" && (
+            <div className="action-buttons">
+              <button className="add-diploma-button" onClick={handleAddDiploma}>
+                Add Diploma
+              </button>
+              <button className="search-button" onClick={handleSearchRedirect}>
+                Search Diplomas
+              </button>
+            </div>
+          )}
 
-          <h2>Search Diploma</h2>
-          <div className="search-fields">
-            <div className="search-field">
-              <UserSearch
-                role="Student"
-                label="Student - autor:"
-                onSelect={(user) =>
-                  setSearchParams({ ...searchParams, student: user.id })
-                }
-              />
+          {/* Przyciski dla Student */}
+          {userRole === "Student" && (
+            <div className="action-buttons">
+              <button className="search-button" onClick={handleSearchRedirect}>
+                Search Diplomas
+              </button>
+              <button
+                className="search-button"
+                onClick={() => fetchDiplomas("student", userId, userRole)}
+              >
+                My Diploma
+              </button>
             </div>
-            <div className="search-field">
-              <UserSearch
-                role="Professor"
-                label="Promotor:"
-                onSelect={(user) =>
-                  setSearchParams({ ...searchParams, promoter: user.id })
-                }
-              />
-            </div>
-            <div className="search-field">
-              <UserSearch
-                role="Professor"
-                label="Recenzent:"
-                onSelect={(user) =>
-                  setSearchParams({ ...searchParams, reviewer: user.id })
-                }
-              />
-            </div>
-            <div className="search-field">
-              <label>Status:</label>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Wprowadź status..."
-                value={searchParams.status}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, status: e.target.value })
-                }
-              />
-            </div>
-            <button className="search-button" onClick={handleSearch}>
-              Search
-            </button>
-          </div>
+          )}
 
-          <div className="diplomas-table">
-            <h3>List of Diploma</h3>
-            <table className="diploma-table">
-              <thead>
-                <tr>
-                  <th>Diploma</th>
-                </tr>
-              </thead>
-              <tbody>
-                {searchResults.map((diploma) => (
-                  <tr
-                    key={diploma.diplomaId}
-                    className="diploma-table-row"
-                    onClick={() => setSelectedDiploma(diploma)}
-                  >
-                    <td className="diploma-table-cell">{diploma.title}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* Nagłówek zależny od roli */}
+          <h2>
+            {userRole === "Professor"
+              ? viewMode === "supervision"
+                ? "Supervision Panel"
+                : "Review Panel"
+              : "My Diploma"}
+          </h2>
+
+          {/* Lista dyplomów */}
+          {loading ? (
+            <p>Loading diplomas...</p>
+          ) : diplomas.length === 0 ? (
+            <p>No diplomas found.</p>
+          ) : (
+            <ul className="diploma-list">
+              {diplomas.map((diploma) => (
+                <li
+                  key={diploma.id}
+                  onClick={() => setSelectedDiploma(diploma)}
+                  className={
+                    selectedDiploma?.id === diploma.id ? "selected" : ""
+                  }
+                >
+                  {diploma.title} - {diploma.studentName}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        {/* Right Side */}
+        {/* Prawa sekcja - szczegóły dyplomu */}
         <div className="right-pane">
-          <h2>Wybrany dyplom</h2>
-          <table className="selected-diploma-table">
-            <thead>
-              <tr>
-                <th>Pole</th>
-                <th>Wartość</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Diploma ID</td>
-                <td>{selectedDiploma?.diplomaId || "-"}</td>
-              </tr>
-              <tr>
-                <td>Title</td>
-                <td>{selectedDiploma?.title || "-"}</td>
-              </tr>
-              <tr>
-                <td>Type</td>
-                <td>{selectedDiploma?.type || "-"}</td>
-              </tr>
-              <tr>
-                <td>Description</td>
-                <td>{selectedDiploma?.description || "-"}</td>
-              </tr>
-              <tr>
-                <td>Department Name</td>
-                <td>{selectedDiploma?.departmentName || "-"}</td>
-              </tr>
-              <tr>
-                <td>Course</td>
-                <td>{selectedDiploma?.course || "-"}</td>
-              </tr>
-              <tr>
-                <td>Create Date</td>
-                <td>{selectedDiploma?.createDate || "-"}</td>
-              </tr>
-              <tr>
-                <td>Status</td>
-                <td>{selectedDiploma?.status || "-"}</td>
-              </tr>
-            </tbody>
-          </table>
+          {userRole === "Professor" && (
+            <div className="right-pane-header">
+              <button
+                className={`supervision-button ${
+                  viewMode === "supervision" ? "active" : ""
+                }`}
+                onClick={() => handleViewModeChange("supervision")}
+              >
+                Supervision
+              </button>
+              {/* <button
+                className={`review-button ${
+                  viewMode === "review" ? "active" : ""
+                }`}
+                onClick={() => handleViewModeChange("review")}
+              >
+                Review
+              </button> */}
+            </div>
+          )}
+
+          <h2>{userRole === "Student" ? "My Diploma" : "Selected Diploma"}</h2>
+          {selectedDiploma ? (
+            <DiplomaDetails diploma={selectedDiploma} />
+          ) : (
+            <p>Please select a diploma to see details.</p>
+          )}
         </div>
       </div>
 

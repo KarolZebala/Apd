@@ -1,110 +1,74 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:8080"; // Zmień na pełną ścieżkę backendu, jeśli korzystasz z innego serwera
+const apiUrl = "http://localhost:8080"; // Zmień na właściwą ścieżkę backendu
+
+// Pobiera token JWT z localStorage i dodaje go do nagłówków
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("jwtToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Obsługa żądań z przechwytywaniem błędów
+const request = async (method, url, data = null, requiresAuth = false) => {
+  try {
+    const response = await axios({
+      method,
+      url: `${apiUrl}${url}`,
+      data,
+      headers: {
+        "Content-Type": "application/json",
+        ...(requiresAuth ? getAuthHeaders() : {}),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "Wystąpił błąd" };
+  }
+};
 
 // Funkcja logowania
-export const login = async (username, password) => {
-  try {
-    const response = await axios.post(`${apiUrl}/User/Login`, {
-      username,
-      password,
-    });
-    return response.data; // Zwraca token
-  } catch (error) {
-    // Rzuć obiekt błędu, aby komponent mógł go obsłużyć
-    throw error.response?.data || { message: "Błąd podczas logowania" };
-  }
-};
+export const login = (username, password) =>
+  request("POST", "/User/Login", { username, password }).then((data) => {
+    if (data.token) localStorage.setItem("jwtToken", data.token);
+    return data;
+  });
 
 // Funkcja rejestracji
-export const register = async (username, email, password, role) => {
-  try {
-    const response = await axios.post(
-      `${apiUrl}/User/Register`,
-      {
-        username,
-        email,
-        password,
-        role,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data; // Zwraca odpowiedź z backendu
-  } catch (error) {
-    console.error("Error registering:", error.response?.data || error.message);
-    // Rzuć obiekt błędu, aby komponent mógł go obsłużyć
-    throw error.response?.data || { message: "Błąd podczas rejestracji" };
-  }
-};
+export const register = (username, email, password, role) =>
+  request("POST", "/User/Register", { username, email, password, role });
 
-// Funkcja tworzenia dyplomu
-export const createDiploma = async (diplomaData) => {
-  try {
-    const response = await axios.post(
-      `${apiUrl}/Diploma/AddDiploma`,
-      diplomaData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data; // Zwraca odpowiedź z backendu
-  } catch (error) {
-    throw (
-      error.response?.data || { message: "Błąd podczas tworzenia dyplomu." }
-    );
-  }
-};
+// Pobieranie aktualnie zalogowanego użytkownika
+export const me = () => request("GET", "/User/Me", null, true);
 
-// Funkcja szukania dyplomu
-export const searchDiploma = async (diplomaData) => {
-  try {
-    const response = await axios.post(
-      `${apiUrl}/Diploma/SearchDiploma`,
-      diplomaData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data; // Zwraca odpowiedź z backendu
-  } catch (error) {
-    throw error.response?.data || { message: "Bład podczas szukania dyplomu." };
-  }
-};
+// Pobieranie użytkownika po ID
+export const getUserById = (userId) =>
+  request("GET", `/User/GetUserById?id=${userId}`, null, true);
 
-export const searchUsers = async (searchString, role) => {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/User/Search?searchString=${encodeURIComponent(
-        searchString
-      )}&role=${role}`
-    );
-    if (!response.ok) throw new Error("Error fetching users");
-    return await response.json(); // API powinno zwrócić listę użytkowników
-  } catch (error) {
-    console.error("Failed to fetch users:", error);
-    return [];
-  }
-};
+// Wyszukiwanie użytkowników
+export const searchUsers = (searchString, role) =>
+  request(
+    "GET",
+    `/User/Search?searchString=${encodeURIComponent(
+      searchString
+    )}&role=${role}`,
+    null,
+    true
+  );
 
+// Pobieranie ID użytkownika po nazwie i roli
 export const getUserIdByUsernameAndRole = async (username, role) => {
-  try {
-    const users = await searchUsers(username, role);
-
-    if (users.length > 0) {
-      return users[0].id; // Zakładamy, że API zwraca tablicę i bierzemy pierwszy wynik
-    }
-
-    return null; // Jeśli użytkownik nie został znaleziony
-  } catch (error) {
-    console.error("Błąd podczas pobierania ID użytkownika:", error);
-    return null;
-  }
+  const users = await searchUsers(username, role);
+  return users.length > 0 ? users[0].id : null;
 };
+
+// Tworzenie dyplomu
+export const createDiploma = (diplomaData) =>
+  request("POST", "/Diploma/AddDiploma", diplomaData, true);
+
+// Wyszukiwanie dyplomów
+export const searchDiploma = (diplomaData) =>
+  request("POST", "/Diploma/SearchDiploma", diplomaData, true);
+
+// Aktualizacja dyplomu
+export const updateDiploma = (diplomaData) =>
+  request("POST", "/Diploma/UpdateDiploma", diplomaData, true);

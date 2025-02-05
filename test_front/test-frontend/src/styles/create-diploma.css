@@ -1,4 +1,4 @@
-.suggestions-list {
+/* .suggestions-list {
   position: absolute;
   background: white;
   border: 1px solid #ddd;
@@ -18,4 +18,132 @@
 
 .suggestions-list li:hover {
   background: #f0f0f0;
+} */
+
+
+/* Styl dla pop-up menu */
+/* Pop-up menu będzie miało tę samą szerokość co input */
+.suggestions-popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  overflow-y: auto;
+  width: 100%; /* Teraz pop-up ma dokładnie taką samą szerokość jak input */
+  box-sizing: border-box; /* Zapewnia, że szerokość uwzględnia padding i border */
+  z-index: 50;
+  padding: 5px 0;
+}
+
+/* Styl listy podpowiedzi */
+.suggestions-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 400px;
+}
+
+/* Styl pojedynczej podpowiedzi */
+.suggestions-popup li {
+  padding: 12px 16px;
+  max-width: 300px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Efekt hover na podpowiedziach */
+.suggestions-popup li:hover {
+  background: #007bff;
+  color: white;
+  max-width: 300px;
+  border-radius: 4px;
+}
+
+
+
+
+.suggestions-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px; /* Zaokrąglone rogi */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efekt uniesienia */
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 5px;
+  z-index: 1000;
+  display: none; /* Domyślnie ukryte */
+}
+
+/* Wyświetlanie pop-upu, gdy są podpowiedzi */
+.suggestions-list.active {
+  display: block;
+}
+
+.suggestions-list li {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+  text-align: left;
+  display: block;
+}
+
+.suggestions-list li:hover {
+  background: #007bff;
+  color: white;
+  border-radius: 4px; /* Zaokrąglenie rogów na hover */
+}
+
+/* Jeśli podpowiedzi mają być absolutnie pozycjonowane względem pola input */
+.suggestions-wrapper {
+  position: relative;
+}
+
+/* Efekt przyciemnienia tła po udanym utworzeniu dyplomu */
+.create-diploma-page.dimmed {
+  position: relative;
+  pointer-events: none;
+}
+
+.create-diploma-page.dimmed::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Blokowanie interakcji po rozpoczęciu tworzenia dyplomu */
+.interaction-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 15;
+}
+
+/* Styl komunikatu o sukcesie */
+.success-message-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 20;
 }
