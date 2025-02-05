@@ -7,8 +7,6 @@ import {
 } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
-import StudentPage from "../pages/StudentPage";
-import PromoterPage from "../pages/PromoterPage";
 import CreateDiplomaPage from "../pages/CreateDiplomaPage";
 import SearchPage from "../pages/DiplomaSearch"; // <-- Import nowej strony
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -23,22 +21,6 @@ const AppRouter = () => {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Zabezpieczone strony */}
-        <Route
-          path="/student"
-          element={
-            <ProtectedRoute>
-              <StudentPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/promoter"
-          element={
-            <ProtectedRoute>
-              <PromoterPage />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="/first"
           element={
