@@ -73,6 +73,7 @@ public static class DiplomaExtensions
         {
             DiplomaTagId = diplomaTag.DiplomaTagId,
             Name = diplomaTag.Name,
+            DiplomaId = diplomaTag.DiplomaId
         };
     }
 
