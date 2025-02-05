@@ -9,7 +9,7 @@ namespace Adp.Application.Services;
 
 public interface IDiplomaReviewService
 {
-    Task<long> AddReview(CreateDiplomaReviewRequestModel requestModel);
+    Task<long> AddReview(CreateDiplomaReviewRequestModel requestModel, string currentUserId);
     Task<DiplomaReviewDto?> GetReviewById(long reviewId);
     
     Task<DiplomaReviewDto[]> SearchReviews(DiplomaReviewSearchRequestModel requestModel);
@@ -40,12 +40,17 @@ public class DiplomaReviewService : IDiplomaReviewService
         _diplomaReviewRepository = diplomaReviewRepository;
     }
 
-    public async Task<long> AddReview(CreateDiplomaReviewRequestModel requestModel)
+    public async Task<long> AddReview(CreateDiplomaReviewRequestModel requestModel, string currentUserId)
     {
         var diploma = await _diplomaRepository.GetByIdAsync(requestModel.DiplomaId);
         if (diploma == null)
         {
             throw new ArgumentException("Diploma not found");
+        }
+
+        if (diploma.ReviewerId != currentUserId)
+        {
+            throw new ArgumentException($"Curent user id not a reviewer of diploma: {diploma.DiplomaId}");
         }
         
         var review = Domain.Diploma.DiplomaReview.CreateNew(
@@ -53,6 +58,11 @@ public class DiplomaReviewService : IDiplomaReviewService
             requestModel.ReviewerId,
             requestModel.ReviewContent
         );
+
+        if (string.IsNullOrWhiteSpace(review.ReviewContent))
+        {
+            throw new ArgumentException("Review content is empty");
+        }
         
         await _diplomaReviewRepository.AddAsync(review);
         await _diplomaRepository.SaveChangesAsync();

@@ -1,5 +1,6 @@
 using Adp.Application.RequestModel;
 using Adp.Application.Services;
+using Apd.Api.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,8 @@ public class DiplomaReviewController : ControllerBase
     {
         try
         {
-            var res = await _diplomaReviewService.AddReview(requestModel);
+            var currentUserId = User.GetUserIdFromToken();
+            var res = await _diplomaReviewService.AddReview(requestModel, currentUserId);
 
             return Ok(res);
         }

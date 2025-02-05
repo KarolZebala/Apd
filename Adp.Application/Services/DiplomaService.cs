@@ -15,7 +15,7 @@ public interface IDiplomaService
 {
     Task<long> AddDiploma(CreateDiplomaRequestModel requestModel);
     Task<DiplomaDto?> GetDiplomaById(long diplomaId);
-    Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel);
+    Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel, string currentUserId);
     Task<DiplomaDto[]> SearchDiploma(DiplomaSearchRequestModel requestModel);
     Task<DiplomaAttachmentFileDto?> GetAttachmentFile(long diplomaId, long attachmentId);
 }
@@ -23,38 +23,23 @@ public interface IDiplomaService
 public class DiplomaService : IDiplomaService
 {
     private readonly IDiplomaRepository _diplomaRepository;
-    /*private readonly IWorkflowLaunchpad _workflowLaunchpad;
-    private readonly IWorkflowDispatcher _workflowDispatcher;
-    private readonly IWorkflowRunner _workflowRunner;*/
     private readonly IBuildsAndStartsWorkflow _buildsAndStartsWorkflow;
 
     private readonly IUserRepository _userRepository;
 
     private readonly IEmailSender _emailSender;
-    /*private readonly IWorkflowFactory _workflowFactory;
-    private readonly IWorkflowRegistry _workflowRegistry;*/
 
     public DiplomaService(
         IDiplomaRepository diplomaRepository,
-        /*IWorkflowLaunchpad workflowLaunchpad,
-        IWorkflowDispatcher workflowDispatcher,
-        IWorkflowRunner workflowRunner,*/
-        IBuildsAndStartsWorkflow buildsAndStartsWorkflow
-        /*IWorkflowFactory workflowFactory,
-        IWorkflowRegistry workflowRegistry*/,
+        IBuildsAndStartsWorkflow buildsAndStartsWorkflow,
         IUserRepository userRepository,
         IEmailSender emailSender
     )
     {
         _diplomaRepository = diplomaRepository;
-        /*_workflowLaunchpad = workflowLaunchpad;
-        _workflowDispatcher = workflowDispatcher;
-        _workflowRunner = workflowRunner;*/
         _buildsAndStartsWorkflow = buildsAndStartsWorkflow;
         _userRepository = userRepository;
         _emailSender = emailSender;
-        /*_workflowFactory = workflowFactory;
-        _workflowRegistry = workflowRegistry;*/
     }
 
     public async Task<long> AddDiploma(CreateDiplomaRequestModel requestModel)
@@ -74,55 +59,29 @@ public class DiplomaService : IDiplomaService
         await _diplomaRepository.SaveChangesAsync();
         
         var student = await _userRepository.GetByIdAsync(diploma.StudentId);
+        
+        if (student is null)
+        {
+            throw new ArgumentException($"Not found student with id: {diploma.StudentId}");
+        }
+        
+        var promoter = await _userRepository.GetByIdAsync(diploma.PromoterId);
+        
+        if (promoter is null)
+        {
+            throw new ArgumentException($"Not found promoter with id: {diploma.PromoterId}");
+        }
+        
+        var reviewer = await _userRepository.GetByIdAsync(diploma.ReviewerId);
+        
+        if (reviewer is null)
+        {
+            throw new ArgumentException($"Not found reviewer with id: {diploma.ReviewerId}");
+        }
 
         var emailMessage =
             $"Dodano prace dyplomową {diploma.DiplomaId}. Zaloguj się do systemu APD w celu jej uzupełnienia";
         await _emailSender.SendEmailAsync(student.Email, "Dodano Twoją prace dyplomową do systemu.", emailMessage);
-        
-        // Dispatch workflow
-        /*
-        var workflowDefinitionId = "TestWorkflow"; // Use the workflow definition ID or name
-        var input = new WorkflowInput(new { DiplomaId = diploma.DiplomaId, diploma.Title }, "diploma");
-        await _workflowDispatcher.DispatchAsync(new TriggerWorkflowsRequest(workflowDefinitionId, new NullBookmark(), input));
-        */
-
-        
-        //dziala
-        //var a =await _buildsAndStartsWorkflow.BuildAndStartWorkflowAsync<DiplomaWorkflow>();
-        
-        //testowanie żeby uruchomić inaczej na razie się nie udało
-        /*var workflowBluePrint = await _workflowRegistry.FindByNameAsync("TestWorkflow", VersionOptions.All);
-        var workflowBluePrint1 = await _workflowRegistry.FindAsync("TestWorkflow", VersionOptions.All);
-        var workflowInstance = await _workflowFactory.InstantiateAsync(workflowBluePrint);
-        
-        //nie zadzialalo z przekazywaniem danych
-        var diplomaData = new Dictionary<string, IDictionary<string, object?>>
-        {
-            {
-                "Diploma", new Dictionary<string, object?>
-                {
-                    { "Type", "Bachelor's Degree" },
-                    { "FieldOfStudy", "Computer Science" },
-                    { "University", "XYZ University" },
-                    { "GraduationYear", 2024 },
-                    { "IsHonors", true },
-                    { "GraduationDate", new DateTime(2024, 6, 15) }
-                }
-            },
-            {
-                "Student", new Dictionary<string, object?>
-                {
-                    { "FirstName", "John" },
-                    { "LastName", "Doe" },
-                    { "StudentID", 123456 },
-                    { "DateOfBirth", new DateTime(2000, 5, 12) },
-                    { "Email", "john.doe@example.com" }
-                }
-            }
-        };
-        
-        workflowInstance.ActivityData = diplomaData;
-        await _workflowRunner.RunWorkflowAsync(workflowBluePrint, workflowInstance);*/
         
         return diploma.DiplomaId;
     }
@@ -142,13 +101,18 @@ public class DiplomaService : IDiplomaService
     /// <summary>
     /// Add extra information to diploma, add attachments to diploma
     /// </summary>
-    public async Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel)
+    public async Task UpdateDiploma(UpdateDiplomaDetailsRequestModel requestModel, string currentUserId)
     {
         var diploma = await _diplomaRepository.GetByIdAsync(requestModel.DiplomaId);
 
         if (diploma == null)
         {
             throw new ArgumentException("Not found diploma");
+        }
+
+        if (diploma.StudentId != currentUserId)
+        {
+            throw new ArgumentException($"Current student is not assigned to diploma: {diploma.DiplomaId}");
         }
         
         diploma.UpdateDescription(requestModel.Description);

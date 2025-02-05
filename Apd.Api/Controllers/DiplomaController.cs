@@ -1,6 +1,7 @@
 using Adp.Application.Dto;
 using Adp.Application.RequestModel;
 using Adp.Application.Services;
+using Apd.Api.Helpers;
 using Apd.Api.RequestModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,8 @@ public class DiplomaController : ControllerBase
     {
         try
         {
-            await _diplomaService.UpdateDiploma(requestModel);
+            var currentUser = User.GetUserIdFromToken();
+            await _diplomaService.UpdateDiploma(requestModel, currentUser);
 
             return Ok();
         }

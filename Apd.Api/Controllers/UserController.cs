@@ -77,6 +77,7 @@ public class UserController : ControllerBase
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Role, roles.FirstOrDefault() ?? "User")
         };
 

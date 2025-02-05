@@ -40,6 +40,11 @@ public class ExamService : IExamService
     {
         var exam = Exam.CreateNew(requestModel.DiplomaId, requestModel.ExamDate, requestModel.Score);
         
+        if (exam.Score.HasValue && (exam.Score.Value < 2 || exam.Score.Value > 5))
+        {
+            throw new ArgumentException($"Exam score is out of range: {exam.Score.Value}, Valid range is 2 to 5");
+        }
+        
         var diploma = await _diplomaRepository.GetByIdAsync(exam.DiplomaId);
 
         if (diploma is null)
@@ -92,6 +97,11 @@ public class ExamService : IExamService
         exam.Update(requestModel.ExamDate, requestModel.Score);
         
         var diploma = await _diplomaRepository.GetByIdAsync(exam.DiplomaId);
+
+        if (exam.Score.HasValue && (exam.Score.Value < 2 || exam.Score.Value > 5))
+        {
+            throw new ArgumentException($"Exam score is out of range: {exam.Score.Value}, Valid range is 2 to 5");
+        }
 
         if (exam.Score.HasValue)
         {
