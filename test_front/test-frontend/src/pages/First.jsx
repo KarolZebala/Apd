@@ -55,6 +55,7 @@ const First = ({ username, onLogout }) => {
             diplomas={diplomas}
             loading={loading}
             setSelectedDiploma={setSelectedDiploma}
+            userRole={userRole}
           />
         </div>
 
