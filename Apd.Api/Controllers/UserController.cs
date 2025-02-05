@@ -7,6 +7,7 @@ using Apd.Api.RequestModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Apd.Api.Controllers;
@@ -150,5 +151,33 @@ public class UserController : ControllerBase
             return Problem(e.Message);
         }
     }
+
+    [HttpGet("Me")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> Me()
+    {
+        var userName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(userName))
+        {
+            return Unauthorized(new { message = "Użytkownik nie jest zalogowany" });
+        }
+
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null)
+        {
+            return NotFound(new { message = "Nie znaleziono użytkownika" });
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        return Ok(new
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Email = user.Email,
+            Roles = roles
+        });
+    }
+
 
 }

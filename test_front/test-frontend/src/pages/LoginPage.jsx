@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FormField from "../components/FormField";
-import { login, verifyUserRole } from "../api/userApi";
-import { jwtDecode } from "jwt-decode";
+import { login, me } from "../api/userApi";
 import "../styles/login.css";
 
 const LoginPage = () => {
@@ -21,19 +20,16 @@ const LoginPage = () => {
       const token = await login(username, password);
 
       localStorage.setItem("jwtToken", token);
-      const decoded = jwtDecode(token);
-
-      const role =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const userData = await me();
 
       setIsSuccess(true);
       setError(null);
 
       setTimeout(() => {
-        if (role === "Student") {
-          navigate("/student");
-        } else if (role === "Professor") {
-          navigate("/promoter");
+        if (userData.roles.includes("Student")) {
+          navigate("/first");
+        } else if (userData.roles.includes("Professor")) {
+          navigate("/first");
         } else {
           setError("Unknown role. Please contact the administrator.");
           setIsLocked(false);

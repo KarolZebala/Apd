@@ -12,6 +12,7 @@ import PromoterPage from "../pages/PromoterPage";
 import CreateDiplomaPage from "../pages/CreateDiplomaPage";
 import SearchPage from "../pages/DiplomaSearch"; // <-- Import nowej strony
 import ProtectedRoute from "../components/ProtectedRoute";
+import First from "../pages/First";
 
 const AppRouter = () => {
   return (
@@ -35,6 +36,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <PromoterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/first"
+          element={
+            <ProtectedRoute>
+              <First />
             </ProtectedRoute>
           }
         />
