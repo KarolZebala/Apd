@@ -207,14 +207,22 @@ const CreateDiplomaPage = () => {
             {isLoading ? "Creating..." : "Create Diploma"}
           </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => navigate("/first")}
             disabled={isLocked}
             className="cancel-button"
           >
             Cancel
-          </button>
+          </button> */}
+
+
+          {/* Nowy przycisk "Cofnij" */}
+      <button onClick={() => navigate("/first")} className="back-button">
+        Cancel
+      </button>
+
+
         </form>
       </div>
     </div>

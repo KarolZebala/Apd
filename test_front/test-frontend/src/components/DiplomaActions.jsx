@@ -8,7 +8,7 @@ const DiplomaActions = ({
   userId,
 }) => {
   return (
-    <div className="action-buttons">
+    <div className="diploma-actions">
       {userRole === "Professor" ? (
         <>
           <button className="add-diploma-button" onClick={onAddDiploma}>
@@ -36,3 +36,4 @@ const DiplomaActions = ({
 };
 
 export default DiplomaActions;
+
