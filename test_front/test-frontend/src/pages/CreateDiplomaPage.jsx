@@ -209,7 +209,7 @@ const CreateDiplomaPage = () => {
 
           <button
             type="button"
-            onClick={() => navigate("/promoter")}
+            onClick={() => navigate("/first")}
             disabled={isLocked}
             className="cancel-button"
           >
