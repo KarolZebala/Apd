@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { searchUsers } from "../api/userApi";
 
 const UserSearch = ({ role, label, onSelect }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (query.length > 1) {
@@ -32,28 +33,45 @@ const UserSearch = ({ role, label, onSelect }) => {
     onSelect(user);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative w-full max-w-md">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <div className="form-field">
+      <label>{label}</label>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="large-input" /* Użycie istniejącej klasy */
         autoComplete="off"
       />
       {showDropdown && results.length > 0 && (
-        <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10">
-          {results.map((user) => (
-            <li
-              key={user.id}
-              onClick={() => handleSelect(user)}
-              className="p-2 cursor-pointer hover:bg-blue-100"
-            >
-              {user.userName || "Unknown"}
-            </li>
-          ))}
-        </ul>
+        <div
+          ref={dropdownRef}
+          className="suggestions-popup absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-50"
+        >
+          <ul className="max-h-48 overflow-y-auto">
+            {results.map((user) => (
+              <li
+                key={user.id}
+                onClick={() => handleSelect(user)}
+                className="p-2 cursor-pointer hover:bg-blue-100"
+              >
+                {user.userName || "Unknown"}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

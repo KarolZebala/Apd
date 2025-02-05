@@ -31,14 +31,14 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/promoter"
           element={
             <ProtectedRoute>
               <PromoterPage />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/first"
           element={

@@ -22,13 +22,25 @@
   gap: 20px;
 }
 
+.diploma-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+}
+
+.role-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Ustawia tę samą odległość pionową co w lewej kolumnie */
+}
+
 /* Przyciski */
 .add-diploma-button,
 .search-button,
 .supervision-button,
 .review-button {
   width: 100%;
-  padding: 15px;
+  padding: 15px 15px;
   font-size: 18px;
   font-weight: bold;
   background-color: #007bff;

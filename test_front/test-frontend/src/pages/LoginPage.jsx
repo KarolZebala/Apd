@@ -67,17 +67,22 @@ const LoginPage = () => {
           disabled={isLocked}
         />
         <button
-          className="form-button"
-          onClick={handleLogin}
-          disabled={!isFormValid || isLocked}
-        >
-          Login
-        </button>
+            className="form-button"
+            onClick={handleLogin}
+            disabled={!isFormValid || isLocked}
+          >
+            Login
+          </button>
         {error && <p className="form-field-error-message">{error}</p>}
 
-        <Link to="/register" className="form-link-button" disabled={isLocked}>
-          Go to Register
-        </Link>
+        <button
+            className="form-button"
+            onClick={() => navigate("/register")}
+            disabled={isLocked}
+          >
+            Go to Register
+        </button>
+
       </div>
     </div>
   );
