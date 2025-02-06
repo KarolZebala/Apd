@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { getUserById, downloadDiploma } from "../api/userApi";
+import {
+  getUserById,
+  downloadDiploma,
+  me,
+  addDiplomaReview,
+} from "../api/userApi";
 import UploadModal from "./UploadModal";
+import ReviewModal from "./ReviewModal"; // Import nowego modalu
 
 const DiplomaListGrouped = ({
   diplomas,
@@ -10,6 +16,22 @@ const DiplomaListGrouped = ({
 }) => {
   const [userNames, setUserNames] = useState({});
   const [uploadDiploma, setUploadDiploma] = useState(null);
+  const [reviewDiploma, setReviewDiploma] = useState(null);
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
+
+  useEffect(() => {
+    // Pobierz ID aktualnie zalogowanego użytkownika
+    const fetchCurrentUser = async () => {
+      try {
+        const user = await me();
+        setLoggedInUserId(user.id);
+      } catch (error) {
+        console.error("Error fetching logged-in user:", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const fetchUserName = async (userId) => {
     if (!userId || userNames[userId]) return;
@@ -20,7 +42,7 @@ const DiplomaListGrouped = ({
         [userId]: user?.userName || "Unknown user",
       }));
     } catch (error) {
-      console.error(`Error downloading user ${userId}:`, error);
+      console.error(`Error fetching user ${userId}:`, error);
     }
   };
 
@@ -74,13 +96,19 @@ const DiplomaListGrouped = ({
                       </button>
                     )}
                     {["Professor", "Student"].includes(userRole) &&
-                      status === "Gotowy do recenzji" && (
+                      status !== "Nowy" && (
                         <button
-                          onClick={() => {
-                            downloadDiploma(diploma.diplomaId);
-                          }}
+                          onClick={() => downloadDiploma(diploma.diplomaId)}
                         >
                           Download
+                        </button>
+                      )}
+                    {/* Przycisk Add Review tylko dla przypisanego recenzenta */}
+                    {userRole === "Professor" &&
+                      diploma.reviewerId === loggedInUserId &&
+                      status === "Gotowy do recenzji" && (
+                        <button onClick={() => setReviewDiploma(diploma)}>
+                          Add Review
                         </button>
                       )}
                   </td>
@@ -94,6 +122,13 @@ const DiplomaListGrouped = ({
         <UploadModal
           diploma={uploadDiploma}
           onClose={() => setUploadDiploma(null)}
+        />
+      )}
+      {reviewDiploma && (
+        <ReviewModal
+          diploma={reviewDiploma}
+          reviewerId={loggedInUserId}
+          onClose={() => setReviewDiploma(null)}
         />
       )}
     </>

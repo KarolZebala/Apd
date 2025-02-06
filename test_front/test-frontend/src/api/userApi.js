@@ -76,7 +76,7 @@ export const updateDiploma = (diplomaData) =>
 export const downloadDiploma = async (diplomaId) => {
   try {
     const response = await axios.get(
-      `${apiUrl}/Diploma/DownloadDiploma?diplomaId=${diplomaId}&attachmentId=${attachmentId}`,
+      `${apiUrl}/Diploma/DownloadDiploma?diplomaId=${diplomaId}&attachmentId=${diplomaId}`,
       {
         headers: {
           ...getAuthHeaders(),
