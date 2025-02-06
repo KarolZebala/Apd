@@ -24,9 +24,7 @@ public class DiplomaService : IDiplomaService
 {
     private readonly IDiplomaRepository _diplomaRepository;
     private readonly IBuildsAndStartsWorkflow _buildsAndStartsWorkflow;
-
     private readonly IUserRepository _userRepository;
-
     private readonly IEmailSender _emailSender;
 
     public DiplomaService(
@@ -171,21 +169,7 @@ public class DiplomaService : IDiplomaService
 
         return diplomas.ToDto();
     }
-
-    public async Task AddReview(CreateDiplomaReviewRequestModel requestModel)
-    {
-        var diploma = await _diplomaRepository.GetByIdAsync(requestModel.DiplomaId);
-        
-        if (diploma == null)
-        {
-            throw new ArgumentException("Not found diploma");
-        }
-        
-        diploma.AddReview(requestModel.ReviewerId, requestModel.ReviewContent);
-        
-        await _diplomaRepository.SaveChangesAsync();
-    }
-
+    
     public async Task<DiplomaAttachmentFileDto?> GetAttachmentFile(long diplomaId, long attachmentId)
     {
         var diploma = await _diplomaRepository.GetByIdWithAttachmentsAsync(diplomaId);

@@ -129,15 +129,9 @@ public sealed class Diploma
     }
 
     public void AddReview(
-        string reviewerId,
-        string reviewContent
+        DiplomaReview review
     )
     {
-        var review = DiplomaReview.CreateNew(
-            DiplomaId,
-            reviewerId,
-            reviewContent
-        );
         _reviews.Add(review);
 
         Status = "Zrecenzowany";

@@ -94,6 +94,7 @@ public class DiplomaController : ControllerBase
     }
 
     [HttpPost("SearchDiploma")]
+    [AllowAnonymous]
     public async Task<IActionResult> SearchDiploma([FromBody] DiplomaSearchRequestModel requestModel)
     {
         try

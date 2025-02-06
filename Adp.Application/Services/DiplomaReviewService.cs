@@ -63,6 +63,8 @@ public class DiplomaReviewService : IDiplomaReviewService
         {
             throw new ArgumentException("Review content is empty");
         }
+
+        diploma.AddReview(review);
         
         await _diplomaReviewRepository.AddAsync(review);
         await _diplomaRepository.SaveChangesAsync();
