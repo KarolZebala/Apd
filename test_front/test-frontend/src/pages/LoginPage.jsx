@@ -84,6 +84,14 @@ const LoginPage = () => {
             Go to Register
         </button>
 
+        <button
+            className="form-button"
+            onClick={() => navigate("/search")}
+            disabled={isLocked}
+          >
+            Search in archive
+        </button>
+
       </div>
     </div>
   );
