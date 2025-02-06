@@ -17,13 +17,18 @@ public class ExamRepository(ApdDbContext _context) : IExamRepository
         return await Task.FromResult(res);
     }
 
-    public async Task<Exam[]> GetExamsAsync(int? pageNumber, int? pageSize)
+    public async Task<Exam[]> GetExamsAsync(long? diplomaId, int? pageNumber, int? pageSize)
     {
         IQueryable<Exam> query = _context.Exams
             .AsNoTracking()
             .AsQueryable();
-        
 
+
+        if (diplomaId.HasValue)
+        {
+            query = query.Where(x => x.DiplomaId == diplomaId);
+        }
+        
         if (pageNumber.HasValue && pageSize.HasValue)
         {
             query = query.Skip((pageNumber.Value) * pageSize.Value).Take(pageSize.Value);

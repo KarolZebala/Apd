@@ -157,7 +157,7 @@ public class ExamService : IExamService
 
     public async Task<ExamDto[]> SearchExams(SearchExamRequestModel requestModel)
     {
-        var exams = await _examRepository.GetExamsAsync(requestModel.PageNumber, requestModel.PageSize);
+        var exams = await _examRepository.GetExamsAsync(requestModel.DiplomaId, requestModel.PageNumber, requestModel.PageSize);
 
         var dtos = exams.ToDto();
         return dtos;
