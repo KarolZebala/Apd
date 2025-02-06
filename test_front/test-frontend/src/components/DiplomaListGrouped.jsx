@@ -3,10 +3,10 @@ import {
   getUserById,
   downloadDiploma,
   me,
-  addDiplomaReview,
 } from "../api/userApi";
 import UploadModal from "./UploadModal";
-import ReviewModal from "./ReviewModal"; // Import nowego modalu
+import ReviewModal from "./ReviewModal";
+import AddExamModal from "./AddExamModal"; // Import nowego modalu
 
 const DiplomaListGrouped = ({
   diplomas,
@@ -17,6 +17,7 @@ const DiplomaListGrouped = ({
   const [userNames, setUserNames] = useState({});
   const [uploadDiploma, setUploadDiploma] = useState(null);
   const [reviewDiploma, setReviewDiploma] = useState(null);
+  const [examDiploma, setExamDiploma] = useState(null); // Nowy stan dla egzaminu
   const [loggedInUserId, setLoggedInUserId] = useState(null);
 
   useEffect(() => {
@@ -111,6 +112,15 @@ const DiplomaListGrouped = ({
                           Add Review
                         </button>
                       )}
+                    
+                    {/* Przycisk Add Exam tylko dla przypisanego promotora */}
+                    {userRole === "Professor" &&
+                      diploma.promoterId === loggedInUserId &&
+                      status === "Zrecenzowany" && (
+                        <button onClick={() => setExamDiploma(diploma)}>
+                          Add Exam
+                        </button>
+                      )}
                   </td>
                 </tr>
               ))}
@@ -118,6 +128,7 @@ const DiplomaListGrouped = ({
           </table>
         </div>
       ))}
+
       {uploadDiploma && (
         <UploadModal
           diploma={uploadDiploma}
@@ -129,6 +140,12 @@ const DiplomaListGrouped = ({
           diploma={reviewDiploma}
           reviewerId={loggedInUserId}
           onClose={() => setReviewDiploma(null)}
+        />
+      )}
+      {examDiploma && (
+        <AddExamModal
+          diploma={examDiploma}
+          onClose={() => setExamDiploma(null)}
         />
       )}
     </>
