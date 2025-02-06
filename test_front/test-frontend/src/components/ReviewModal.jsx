@@ -5,6 +5,8 @@ const ReviewModal = ({ diploma, reviewerId, onClose }) => {
   const [reviewText, setReviewText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   const handleSubmit = async () => {
     if (!reviewText.trim()) {
@@ -13,12 +15,19 @@ const ReviewModal = ({ diploma, reviewerId, onClose }) => {
     }
 
     setLoading(true);
+    setIsLocked(true);
+
     try {
       await addDiplomaReview(diploma.diplomaId, reviewerId, reviewText);
-      alert("Review added successfully!");
-      onClose();
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       setError("Failed to add review. Try again.");
+      setIsLocked(false);
     } finally {
       setLoading(false);
     }
@@ -26,6 +35,13 @@ const ReviewModal = ({ diploma, reviewerId, onClose }) => {
 
   return (
     <div className="modal-overlay">
+      {isSuccess && (
+        <div className="success-message-overlay">
+          <p>Review submitted successfully!</p>
+        </div>
+      )}
+      {isLocked && <div className="interaction-blocker"></div>}
+
       <div className="modal-container">
         <h2>Add Review for: {diploma.title}</h2>
         <textarea
@@ -33,16 +49,17 @@ const ReviewModal = ({ diploma, reviewerId, onClose }) => {
           onChange={(e) => setReviewText(e.target.value)}
           placeholder="Write your review here..."
           rows="8"
+          disabled={isLocked}
         />
         {error && <p className="error">{error}</p>}
         <div className="modal-actions">
-          <button className="cancel-btn" onClick={onClose} disabled={loading}>
+          <button className="cancel-btn" onClick={onClose} disabled={isLocked}>
             Cancel
           </button>
           <button
             className="submit-btn"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loading || isLocked}
           >
             {loading ? "Submitting..." : "Submit Review"}
           </button>
