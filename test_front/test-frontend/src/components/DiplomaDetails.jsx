@@ -32,6 +32,11 @@ const DiplomaDetails = ({ diploma }) => {
     fetchUserDetails();
   }, [diploma]);
 
+  // Obsługa tagów: usunięcie duplikatów i połączenie w jeden string
+  const uniqueTags = diploma?.tags
+    ? [...new Set(diploma.tags.map((tag) => tag.name))].join(", ")
+    : "-";
+
   return (
     <table className="selected-diploma-table">
       <thead>
@@ -83,7 +88,7 @@ const DiplomaDetails = ({ diploma }) => {
         </tr>
         <tr>
           <td>Tags</td>
-          <td>{diploma?.tag || "-"}</td>
+          <td>{uniqueTags}</td>
         </tr>
       </tbody>
     </table>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getUserById } from "../api/userApi";
-import UploadModal from "./UploadModal"; // Nowy komponent modala
+import { getUserById, downloadDiploma } from "../api/userApi";
+import UploadModal from "./UploadModal";
 
 const DiplomaListGrouped = ({
   diplomas,
@@ -9,7 +9,7 @@ const DiplomaListGrouped = ({
   userRole,
 }) => {
   const [userNames, setUserNames] = useState({});
-  const [uploadDiploma, setUploadDiploma] = useState(null); // Przechowuje pracę do uploadu
+  const [uploadDiploma, setUploadDiploma] = useState(null);
 
   const fetchUserName = async (userId) => {
     if (!userId || userNames[userId]) return;
@@ -20,7 +20,7 @@ const DiplomaListGrouped = ({
         [userId]: user?.userName || "Unknown user",
       }));
     } catch (error) {
-      console.error(`Error fetching user ${userId}:`, error);
+      console.error(`Error downloading user ${userId}:`, error);
     }
   };
 
@@ -53,9 +53,7 @@ const DiplomaListGrouped = ({
                 <th>Student</th>
                 <th>Supervisor</th>
                 <th>Reviewer</th>
-                {userRole === "Student" && status === "Nowy" && (
-                  <th>Actions</th>
-                )}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -69,13 +67,23 @@ const DiplomaListGrouped = ({
                   <td>{userNames[diploma.studentId] || "Loading..."}</td>
                   <td>{userNames[diploma.promoterId] || "Loading..."}</td>
                   <td>{userNames[diploma.reviewerId] || "Loading..."}</td>
-                  {userRole === "Student" && status === "Nowy" && (
-                    <td>
+                  <td>
+                    {userRole === "Student" && status === "Nowy" && (
                       <button onClick={() => setUploadDiploma(diploma)}>
                         Upload
                       </button>
-                    </td>
-                  )}
+                    )}
+                    {["Professor", "Student"].includes(userRole) &&
+                      status === "Gotowy do recenzji" && (
+                        <button
+                          onClick={() => {
+                            downloadDiploma(diploma.diplomaId);
+                          }}
+                        >
+                          Download
+                        </button>
+                      )}
+                  </td>
                 </tr>
               ))}
             </tbody>

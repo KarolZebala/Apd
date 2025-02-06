@@ -6,9 +6,11 @@ const UploadModal = ({ diploma, onClose }) => {
   const [tags, setTags] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   useEffect(() => {
-    console.log("Received diploma:", diploma); // Logujemy obiekt diploma
+    console.log("Received diploma:", diploma);
   }, [diploma]);
 
   const handleFileChange = (event) => {
@@ -29,11 +31,13 @@ const UploadModal = ({ diploma, onClose }) => {
 
     if (!diploma || !diploma.diplomaId) {
       setError("Invalid diploma information.");
-      console.error("Invalid diploma:", diploma); // Logujemy błąd w konsoli
+      console.error("Invalid diploma:", diploma);
       return;
     }
 
     setLoading(true);
+    setIsLocked(true);
+
     try {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -41,7 +45,7 @@ const UploadModal = ({ diploma, onClose }) => {
         const base64File = reader.result.split(",")[1];
 
         const payload = {
-          diplomaId: diploma.diplomaId, // Zmienione na diploma.diplomaId
+          diplomaId: diploma.diplomaId,
           description: "Uploaded by student",
           attachments: [
             {
@@ -56,36 +60,54 @@ const UploadModal = ({ diploma, onClose }) => {
         };
 
         await updateDiploma(payload);
-        onClose(); // Zamykamy modal po udanym wysłaniu
+
+        setIsSuccess(true);
+
+        setTimeout(() => {
+          onClose(); // Zamknięcie modala
+          window.location.reload(); // Odświeżenie strony
+        }, 3000);
       };
     } catch (error) {
       setError("Failed to upload file.");
-      console.error("Upload error:", error); // Logujemy błąd w przypadku niepowodzenia
+      console.error("Upload error:", error);
+      setIsLocked(false);
     } finally {
-      setLoading(false); // Wyłączamy ładowanie po zakończeniu operacji
+      setLoading(false);
     }
   };
 
   return (
     <div className="modal">
+      {isSuccess && (
+        <div className="success-message-overlay">
+          <p>File uploaded successfully!</p>
+        </div>
+      )}
+      {isLocked && <div className="interaction-blocker"></div>}
+
       <div className="modal-content">
         <h3>Upload PDF for {diploma?.title || "Unknown Diploma"}</h3>
         <input
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
+          disabled={isLocked}
         />
         <input
           type="text"
           placeholder="Enter tags (comma separated)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
+          disabled={isLocked}
         />
         {error && <p className="error">{error}</p>}
-        <button onClick={handleUpload} disabled={loading}>
+        <button onClick={handleUpload} disabled={loading || isLocked}>
           {loading ? "Uploading..." : "Upload"}
         </button>
-        <button onClick={onClose}>Cancel</button>
+        <button onClick={onClose} disabled={isLocked}>
+          Cancel
+        </button>
       </div>
     </div>
   );

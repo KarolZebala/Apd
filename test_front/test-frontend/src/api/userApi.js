@@ -72,3 +72,62 @@ export const searchDiploma = (diplomaData) =>
 // Aktualizacja dyplomu
 export const updateDiploma = (diplomaData) =>
   request("POST", "/Diploma/UpdateDiploma", diplomaData, true);
+
+export const downloadDiploma = async (diplomaId) => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}/Diploma/DownloadDiploma?diplomaId=${diplomaId}&attachmentId=${attachmentId}`,
+      {
+        headers: {
+          ...getAuthHeaders(),
+          Accept: "*/*",
+        },
+        responseType: "blob", // Pobieramy plik binarnie
+      }
+    );
+
+    // Tworzenie URL dla pobranego pliku
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+
+    // Parsowanie nazwy pliku z nagłówka `content-disposition`
+    let filename = "diploma.pdf"; // Domyślna nazwa pliku
+    const contentDisposition = response.headers["content-disposition"];
+
+    if (contentDisposition) {
+      const match = contentDisposition.match(
+        /filename\*?=['"]?(?:UTF-8'')?([^"']+)/
+      );
+      if (match) {
+        filename = decodeURIComponent(match[1]);
+      }
+    }
+
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error download diploma:", error);
+  }
+};
+
+export const addDiplomaReview = async (
+  diplomaId,
+  reviewerId,
+  reviewContent
+) => {
+  try {
+    const response = await request(
+      "POST",
+      "/DiplomaReview/AddReview",
+      { diplomaId, reviewerId, reviewContent },
+      true
+    );
+    return response;
+  } catch (error) {
+    console.error("Błąd podczas dodawania recenzji:", error);
+    throw error;
+  }
+};
