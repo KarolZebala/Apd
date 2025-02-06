@@ -52,6 +52,11 @@ public class ExamService : IExamService
             throw new ArgumentException($"Not found diploma with id: {exam.DiplomaId}");
         }
 
+        if (exam.Score.HasValue)
+        {
+            diploma.Complete();
+        }
+
         var student = await _userRepository.GetByIdAsync(diploma.StudentId);
 
         if (student is null)
