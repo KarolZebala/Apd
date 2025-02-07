@@ -67,7 +67,7 @@ export const createDiploma = (diplomaData) =>
 
 // Wyszukiwanie dyplomów
 export const searchDiploma = (diplomaData) =>
-  request("POST", "/Diploma/SearchDiploma", diplomaData, true);
+  request("POST", "/Diploma/SearchDiploma", diplomaData, false);
 
 // Aktualizacja dyplomu
 export const updateDiploma = (diplomaData) =>

@@ -37,14 +37,7 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/search"
-          element={
-            <ProtectedRoute>
-              <SearchPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
   );
