@@ -51,6 +51,11 @@ public class ApdDbContext : IdentityDbContext<IdentityUser, IdentityRole, string
             entity.HasMany(x => x.Reviews).WithOne().HasForeignKey(x => x.DiplomaId);
             entity.HasMany(x => x.Attachments).WithOne().HasForeignKey(x => x.DiplomaId);
             entity.HasMany(x => x.Tags).WithOne().HasForeignKey(x => x.DiplomaId);
+            entity.HasMany(x => x.Exams).WithOne().HasForeignKey(x => x.DiplomaId);
+            
+            entity.HasOne(x => x.Student).WithMany().HasForeignKey(x => x.StudentId);
+            entity.HasOne(x => x.Promoter).WithMany().HasForeignKey(x => x.PromoterId);
+            entity.HasOne(x => x.Reviewer).WithMany().HasForeignKey(x => x.ReviewerId);
         });
 
         modelBuilder.Entity<DiplomaAttachment>(entity =>

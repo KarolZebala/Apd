@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Adp.Domain.Diploma;
 
 public sealed class Diploma
@@ -32,8 +34,11 @@ public sealed class Diploma
     public DateTime CreateDate { get; private set; }
     public string Status { get; private set; } //To do convert to enum
     public string StudentId { get; private set; }
+    public IdentityUser Student { get; private set; }
     public string PromoterId { get; private set; }
+    public IdentityUser Promoter { get; private set; }
     public string ReviewerId { get; private set; }
+    public IdentityUser Reviewer { get; private set; }
     
     public IReadOnlyCollection<DiplomaAttachment> Attachments
     {
@@ -42,6 +47,14 @@ public sealed class Diploma
     }
 
     private HashSet<DiplomaAttachment> _attachments;
+    
+    public IReadOnlyCollection<Exam.Exam> Exams
+    {
+        get => _exams;
+        private set => _exams = new HashSet<Exam.Exam>(value);
+    }
+
+    private HashSet<Exam.Exam> _exams;
     
     public IReadOnlyCollection<DiplomaReview> Reviews
     {
