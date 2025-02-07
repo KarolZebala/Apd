@@ -143,6 +143,20 @@ const CreateDiplomaPage = () => {
           </div>
 
           <div className="form-field">
+            <label>Course:</label>
+            <input
+              type="text"
+              name="course"
+              value={formData.course}
+              onChange={(e) =>
+                setFormData({ ...formData, course: e.target.value })
+              }
+              disabled={isLocked}
+              className="large-input"
+            />
+          </div>
+
+          <div className="form-field">
             <label>Create Date*:</label>
             <input
               type="datetime-local"
