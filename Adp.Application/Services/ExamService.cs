@@ -52,6 +52,11 @@ public class ExamService : IExamService
             throw new ArgumentException($"Not found diploma with id: {exam.DiplomaId}");
         }
 
+        if (exam.Score.HasValue)
+        {
+            diploma.Complete();
+        }
+
         var student = await _userRepository.GetByIdAsync(diploma.StudentId);
 
         if (student is null)
@@ -157,7 +162,7 @@ public class ExamService : IExamService
 
     public async Task<ExamDto[]> SearchExams(SearchExamRequestModel requestModel)
     {
-        var exams = await _examRepository.GetExamsAsync(requestModel.PageNumber, requestModel.PageSize);
+        var exams = await _examRepository.GetExamsAsync(requestModel.DiplomaId, requestModel.PageNumber, requestModel.PageSize);
 
         var dtos = exams.ToDto();
         return dtos;

@@ -8,6 +8,7 @@ import {
 import UploadModal from "./UploadModal";
 import ReviewModal from "./ReviewModal";
 import ReviewContentModal from "./ReviewContentModal";
+import AddExamModal from "./AddExamModal"; // Import nowego modalu
 
 const DiplomaListGrouped = ({
   diplomas,
@@ -18,6 +19,7 @@ const DiplomaListGrouped = ({
   const [userNames, setUserNames] = useState({});
   const [uploadDiploma, setUploadDiploma] = useState(null);
   const [reviewDiploma, setReviewDiploma] = useState(null);
+  const [examDiploma, setExamDiploma] = useState(null); // Nowy stan dla egzaminu
   const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
 
@@ -131,6 +133,15 @@ const DiplomaListGrouped = ({
                         View Review
                       </button>
                     )}
+
+                    {/* Przycisk Add Exam tylko dla przypisanego promotora */}
+                    {userRole === "Professor" &&
+                      diploma.promoterId === loggedInUserId &&
+                      status === "Zrecenzowany" && (
+                        <button onClick={() => setExamDiploma(diploma)}>
+                          Add Exam
+                        </button>
+                      )}
                   </td>
                 </tr>
               ))}
@@ -138,6 +149,7 @@ const DiplomaListGrouped = ({
           </table>
         </div>
       ))}
+
       {uploadDiploma && (
         <UploadModal
           diploma={uploadDiploma}
@@ -155,6 +167,12 @@ const DiplomaListGrouped = ({
         <ReviewContentModal
           reviewContent={selectedReview}
           onClose={() => setSelectedReview(null)}
+        />
+      )}
+      {examDiploma && (
+        <AddExamModal
+          diploma={examDiploma}
+          onClose={() => setExamDiploma(null)}
         />
       )}
     </>

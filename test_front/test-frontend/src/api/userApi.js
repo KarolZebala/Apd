@@ -148,3 +148,32 @@ export const getDiplomaReviewById = async (reviewId) => {
     throw error;
   }
 };
+export const addExam = async (diplomaId, examDate, score) => {
+  try {
+    const response = await request(
+      "POST",
+      "/Exam/AddExam",
+      { diplomaId, examDate, score },
+      true
+    );
+    return response;
+  } catch (error) {
+    console.error("Błąd podczas tworzenia egzaminu:", error);
+    throw error;
+  }
+};
+
+export const updateExam = async (diplomaId, examDate, score) => {
+  try {
+    const response = await request(
+      "POST",
+      "/Exam/AddExam",
+      { diplomaId, examDate, score },
+      true
+    );
+    return response;
+  } catch (error) {
+    console.error("Błąd podczas tworzenia egzaminu:", error);
+    throw error;
+  }
+};
