@@ -3,10 +3,11 @@ import {
   getUserById,
   downloadDiploma,
   me,
-  addDiplomaReview,
+  searchDiplomaReviews,
 } from "../api/userApi";
 import UploadModal from "./UploadModal";
-import ReviewModal from "./ReviewModal"; // Import nowego modalu
+import ReviewModal from "./ReviewModal";
+import ReviewContentModal from "./ReviewContentModal";
 
 const DiplomaListGrouped = ({
   diplomas,
@@ -18,9 +19,9 @@ const DiplomaListGrouped = ({
   const [uploadDiploma, setUploadDiploma] = useState(null);
   const [reviewDiploma, setReviewDiploma] = useState(null);
   const [loggedInUserId, setLoggedInUserId] = useState(null);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
-    // Pobierz ID aktualnie zalogowanego użytkownika
     const fetchCurrentUser = async () => {
       try {
         const user = await me();
@@ -53,6 +54,21 @@ const DiplomaListGrouped = ({
       fetchUserName(reviewerId);
     });
   }, [diplomas]);
+
+  const handleViewReview = async (diploma) => {
+    try {
+      const response = await searchDiplomaReviews(diploma.reviewerId);
+      if (response && Array.isArray(response)) {
+        const review = response.find((r) => r.diplomaId === diploma.diplomaId);
+        setSelectedReview(
+          review ? review.reviewContent : "No review found for this diploma."
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching review:", error);
+      setSelectedReview("Error loading review.");
+    }
+  };
 
   const groupedDiplomas = diplomas.reduce((acc, diploma) => {
     const status = diploma.status || "Unknown";
@@ -103,7 +119,6 @@ const DiplomaListGrouped = ({
                           Download
                         </button>
                       )}
-                    {/* Przycisk Add Review tylko dla przypisanego recenzenta */}
                     {userRole === "Professor" &&
                       diploma.reviewerId === loggedInUserId &&
                       status === "Gotowy do recenzji" && (
@@ -111,6 +126,11 @@ const DiplomaListGrouped = ({
                           Add Review
                         </button>
                       )}
+                    {userRole === "Student" && status === "Zrecenzowany" && (
+                      <button onClick={() => handleViewReview(diploma)}>
+                        View Review
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -129,6 +149,12 @@ const DiplomaListGrouped = ({
           diploma={reviewDiploma}
           reviewerId={loggedInUserId}
           onClose={() => setReviewDiploma(null)}
+        />
+      )}
+      {selectedReview && (
+        <ReviewContentModal
+          reviewContent={selectedReview}
+          onClose={() => setSelectedReview(null)}
         />
       )}
     </>

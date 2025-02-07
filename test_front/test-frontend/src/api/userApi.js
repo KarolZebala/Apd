@@ -73,6 +73,9 @@ export const searchDiploma = (diplomaData) =>
 export const updateDiploma = (diplomaData) =>
   request("POST", "/Diploma/UpdateDiploma", diplomaData, true);
 
+export const searchDiplomaReviews = (reviewerId) =>
+  request("POST", "/DiplomaReview/SearchReview", { reviewerId }, true);
+
 export const downloadDiploma = async (diplomaId) => {
   try {
     const response = await axios.get(
@@ -128,6 +131,20 @@ export const addDiplomaReview = async (
     return response;
   } catch (error) {
     console.error("Błąd podczas dodawania recenzji:", error);
+    throw error;
+  }
+};
+
+export const getDiplomaReviewById = async (reviewId) => {
+  try {
+    return await request(
+      "GET",
+      `/DiplomaReview/GetReview?reviewId=${reviewId}`,
+      null,
+      true
+    );
+  } catch (error) {
+    console.error("Błąd podczas pobierania recenzji:", error);
     throw error;
   }
 };
