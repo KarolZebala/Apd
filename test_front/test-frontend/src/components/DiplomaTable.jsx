@@ -2,10 +2,10 @@ import React from "react";
 import useUserData from "../hooks/useUserData";
 
 const statusMapping = {
-  Nowy: "Waiting for file upload",
-  "Gotowy do recenzji": "Waiting for review",
-  Zrecenzowany: "Waiting for exam assignment",
-  Zakończony: "Completed",
+  New: "Waiting for file upload",
+  "Ready to review": "Waiting for review",
+  Reviewed: "Waiting for exam assignment",
+  Completed: "Completed",
 };
 
 const DiplomaTable = ({

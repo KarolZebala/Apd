@@ -79,7 +79,7 @@ public sealed class Diploma
     {
         Title = title;
         CreateDate = DateTime.UtcNow;
-        Status = "Nowy";
+        Status = "New";
 
         StudentId = studentId;
         PromoterId = promoterId;
@@ -112,7 +112,7 @@ public sealed class Diploma
         );
         _attachments.Add(attachment);
 
-        Status = "Gotowy do recenzji";
+        Status = "Ready to review";
     }
 
 
@@ -134,11 +134,11 @@ public sealed class Diploma
     {
         _reviews.Add(review);
 
-        Status = "Zrecenzowany";
+        Status = "Reviewed";
     }
 
     public void Complete()
     {
-        Status = "Zakończony";
+        Status = "Completed";
     }
 }

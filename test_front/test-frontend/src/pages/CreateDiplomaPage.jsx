@@ -142,7 +142,7 @@ const CreateDiplomaPage = () => {
             />
           </div>
 
-          <div className="form-field">
+          {/* <div className="form-field">
             <label>Course:</label>
             <input
               type="text"
@@ -154,7 +154,7 @@ const CreateDiplomaPage = () => {
               disabled={isLocked}
               className="large-input"
             />
-          </div>
+          </div> */}
 
           <div className="form-field">
             <label>Create Date*:</label>
@@ -231,7 +231,7 @@ const CreateDiplomaPage = () => {
           </button> */}
 
 
-          {/* Nowy przycisk "Cofnij" */}
+          {/* New przycisk "Cofnij" */}
       <button onClick={() => navigate("/first")} className="back-button">
         Cancel
       </button>

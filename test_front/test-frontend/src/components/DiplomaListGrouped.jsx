@@ -19,7 +19,7 @@ const DiplomaListGrouped = ({
   const [userNames, setUserNames] = useState({});
   const [uploadDiploma, setUploadDiploma] = useState(null);
   const [reviewDiploma, setReviewDiploma] = useState(null);
-  const [examDiploma, setExamDiploma] = useState(null); // Nowy stan dla egzaminu
+  const [examDiploma, setExamDiploma] = useState(null); // New stan dla egzaminu
   const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [selectedReview, setSelectedReview] = useState(null);
 
@@ -108,13 +108,13 @@ const DiplomaListGrouped = ({
                   <td>{userNames[diploma.promoterId] || "Loading..."}</td>
                   <td>{userNames[diploma.reviewerId] || "Loading..."}</td>
                   <td>
-                    {userRole === "Student" && status === "Nowy" && (
+                    {userRole === "Student" && status === "New" && (
                       <button onClick={() => setUploadDiploma(diploma)}>
                         Upload
                       </button>
                     )}
                     {["Professor", "Student"].includes(userRole) &&
-                      status !== "Nowy" && (
+                      status !== "New" && (
                         <button
                           onClick={() => downloadDiploma(diploma.diplomaId)}
                         >
@@ -123,12 +123,12 @@ const DiplomaListGrouped = ({
                       )}
                     {userRole === "Professor" &&
                       diploma.reviewerId === loggedInUserId &&
-                      status === "Gotowy do recenzji" && (
+                      status === "Ready to review" && (
                         <button onClick={() => setReviewDiploma(diploma)}>
                           Add Review
                         </button>
                       )}
-                    {userRole === "Student" && status === "Zrecenzowany" && (
+                    {userRole === "Student" && status === "Reviewed" && (
                       <button onClick={() => handleViewReview(diploma)}>
                         View Review
                       </button>
@@ -137,7 +137,7 @@ const DiplomaListGrouped = ({
                     {/* Przycisk Add Exam tylko dla przypisanego promotora */}
                     {userRole === "Professor" &&
                       diploma.promoterId === loggedInUserId &&
-                      status === "Zrecenzowany" && (
+                      status === "Reviewed" && (
                         <button onClick={() => setExamDiploma(diploma)}>
                           Add Exam
                         </button>

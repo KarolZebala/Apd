@@ -117,7 +117,7 @@ const DiplomaSearch = () => {
       <h2>Selected Diploma</h2>
       <DiplomaDetails diploma={selectedDiploma} />
 
-      {/* Nowy przycisk "Cofnij" */}
+      {/* New przycisk "Cofnij" */}
       <button onClick={() => navigate(-1)} className="back-button">
         Back
       </button>

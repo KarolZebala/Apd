@@ -62,10 +62,10 @@ const DiplomaDetails = ({ diploma }) => {
           <td>Department</td>
           <td>{diploma?.departmentName || "-"}</td>
         </tr>
-        <tr>
+        {/* <tr>
           <td>Course</td>
           <td>{diploma?.course || "-"}</td>
-        </tr>
+        </tr> */}
         <tr>
           <td>Create Date</td>
           <td>{diploma?.createDate || "-"}</td>
